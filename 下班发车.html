@@ -1,0 +1,988 @@
+<title>下班发车</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+  :root{
+    --bg:#F4F7F3;
+    --surface:#FFFFFF;
+    --ink:#18241F;
+    --muted:#5D6A63;
+    --line:#D9E2DA;
+    --accent:#0B7A4B;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#E1F0E7;
+    --amber:#F5A623;
+    --amber-soft:#FFF3DC;
+    --danger:#C24C3F;
+    --board:#11171310;
+    --shadow:0 12px 32px rgba(24,36,31,.09);
+    --card-shadow:0 4px 14px rgba(24,36,31,.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1310;
+      --surface:#171E1A;
+      --ink:#E6EEE8;
+      --muted:#94A39A;
+      --line:#28332C;
+      --accent:#37C07D;
+      --accent-ink:#08130D;
+      --accent-soft:#1B3527;
+      --amber:#FFB93E;
+      --amber-soft:#3A2E14;
+      --danger:#E0705F;
+      --shadow:0 12px 32px rgba(0,0,0,.4);
+      --card-shadow:0 4px 14px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1310;
+    --surface:#171E1A;
+    --ink:#E6EEE8;
+    --muted:#94A39A;
+    --line:#28332C;
+    --accent:#37C07D;
+    --accent-ink:#08130D;
+    --accent-soft:#1B3527;
+    --amber:#FFB93E;
+    --amber-soft:#3A2E14;
+    --danger:#E0705F;
+    --shadow:0 12px 32px rgba(0,0,0,.4);
+    --card-shadow:0 4px 14px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Noto Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:16.5px;
+    line-height:1.8;
+    margin:0;
+  }
+  .disp{font-family:"ZCOOL QingKe HuangYou","Noto Sans SC","PingFang SC",sans-serif;font-weight:400;letter-spacing:.02em}
+  .mono{font-family:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px}
+  a{color:var(--accent)}
+  p{margin:.5em 0 1em}
+  strong{font-weight:700}
+
+  /* ============ HERO ============ */
+  .hero{padding:64px 0 8px;text-align:center}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:12.5px;letter-spacing:.18em;color:var(--muted);
+    text-transform:uppercase;margin-bottom:26px;
+  }
+  .eyebrow::before,.eyebrow::after{content:"";width:34px;height:1px;background:var(--line)}
+
+  /* 发车牌 */
+  .board{
+    background:#101612;
+    border:1px solid #2A362E;
+    border-radius:14px;
+    box-shadow:var(--shadow), inset 0 0 60px rgba(0,0,0,.55);
+    max-width:660px;margin:0 auto 34px;
+    padding:18px 26px 20px;
+    overflow-x:auto;
+  }
+  .board table{border-collapse:collapse;width:100%;min-width:480px}
+  .board th{
+    font-size:11px;letter-spacing:.3em;color:#5F6F63;font-weight:500;
+    padding:2px 10px 8px;text-align:center;border-bottom:1px solid #232D26;
+  }
+  .board td{
+    padding:14px 10px 4px;text-align:center;white-space:nowrap;
+    color:#FFC94D;text-shadow:0 0 12px rgba(255,201,77,.45);
+    font-size:clamp(18px,3.4vw,26px);
+  }
+  .board td.ok{color:#4CE08A;text-shadow:0 0 12px rgba(76,224,138,.5);animation:ledblink 2.2s ease-in-out infinite}
+  @keyframes ledblink{0%,100%{opacity:1}50%{opacity:.45}}
+  .flap{display:inline-block;animation:flapin .5s both;backface-visibility:hidden}
+  @keyframes flapin{from{transform:rotateX(90deg);opacity:0}to{transform:rotateX(0);opacity:1}}
+
+  h1{
+    font-size:clamp(52px,9vw,84px);
+    line-height:1.1;margin:0 0 18px;
+    text-wrap:balance;
+  }
+  h1 .go-char{color:var(--accent)}
+  .lede{
+    max-width:34em;margin:0 auto;color:var(--muted);font-size:18px;text-wrap:balance;
+  }
+  .lede b{color:var(--ink);font-weight:700}
+  .pitch-words{
+    display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;
+    margin:30px 0 10px;font-size:clamp(17px,2.6vw,22px);
+  }
+  .pitch-words .sep{color:var(--line);font-size:14px}
+  .pitch-words .w{
+    background:var(--surface);border:1.5px solid var(--line);border-radius:999px;
+    padding:6px 20px;box-shadow:var(--card-shadow);
+  }
+  .pitch-words .w.hot{border-color:var(--accent);color:var(--accent)}
+
+  /* ============ 线路脊柱 ============ */
+  .rail{position:relative;padding:40px 0 20px}
+  .rail::before{
+    content:"";position:absolute;top:0;bottom:0;left:31px;width:4px;
+    background:var(--accent);opacity:.25;border-radius:2px;
+  }
+  .station{position:relative;padding:34px 0 26px 64px;}
+  .station-mark{
+    position:absolute;left:20px;top:44px;width:26px;height:26px;border-radius:50%;
+    background:var(--bg);border:5px solid var(--accent);z-index:1;
+  }
+  .station.terminal .station-mark{background:var(--accent);box-shadow:0 0 0 5px var(--bg),0 0 0 7px var(--accent)}
+  .station.info .station-mark{border-radius:7px;border-color:var(--amber)}
+  .station-label{font-size:12px;letter-spacing:.28em;color:var(--accent);margin-bottom:4px}
+  .station h2{font-size:clamp(26px,4.5vw,34px);margin:0 0 10px;line-height:1.3;text-wrap:balance}
+  .station .sub{color:var(--muted);max-width:36em;margin-top:0}
+
+  @media (max-width:640px){
+    .rail::before{left:13px}
+    .station{padding-left:38px}
+    .station-mark{left:4px;width:20px;height:20px;border-width:4px}
+  }
+
+  /* ============ DEMO 站台 ============ */
+  .stage-outer{margin-top:18px}
+  .stage{
+    position:relative;
+    background:var(--surface);
+    border:1.5px solid var(--line);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:22px 22px 0;
+    overflow:hidden;
+  }
+  .stage-head{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+    padding-bottom:16px;
+  }
+  .led-chip{
+    background:#101612;color:#FFC94D;border-radius:8px;padding:5px 13px;
+    font-size:13px;letter-spacing:.08em;text-shadow:0 0 8px rgba(255,201,77,.4);
+    white-space:nowrap;
+  }
+  .led-chip b{color:#4CE08A;text-shadow:0 0 8px rgba(76,224,138,.5);font-weight:700}
+
+  .cards{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));
+    gap:14px;padding:6px 2px 22px;position:relative;z-index:1;
+  }
+  .badge-card{
+    appearance:none;border:none;background:none;padding:0;cursor:pointer;
+    font:inherit;color:inherit;text-align:center;
+    transition:transform .9s cubic-bezier(.5,0,.85,.45), opacity .5s;
+  }
+  .badge-card:focus-visible .card-inner{outline:3px solid var(--accent);outline-offset:3px}
+  .card-inner{
+    position:relative;
+    background:var(--bg);
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    padding:16px 8px 10px;
+    box-shadow:var(--card-shadow);
+    transition:transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .badge-card:hover .card-inner{transform:translateY(-4px)}
+  .card-inner::before{ /* 挂绳孔 */
+    content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);
+    width:26px;height:6px;border-radius:4px;background:var(--line);
+  }
+  .avatar{
+    width:52px;height:52px;border-radius:50%;margin:8px auto 8px;
+    background:var(--surface);border:1.5px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:28px;
+  }
+  .bname{font-size:15px;font-weight:700;line-height:1.3}
+  .brole{font-size:11px;color:var(--muted);margin-top:2px}
+  .barcode{
+    height:14px;margin:10px 10px 2px;border-radius:2px;opacity:.5;
+    background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 5px,var(--ink) 5px 6px,transparent 6px 10px);
+  }
+  .stamp{
+    position:absolute;top:34px;left:50%;
+    transform:translateX(-50%) rotate(-14deg) scale(2.4);
+    border:2.5px solid var(--accent);color:var(--accent);
+    border-radius:6px;padding:1px 8px;font-weight:700;font-size:14px;letter-spacing:.2em;
+    background:color-mix(in srgb, var(--surface) 82%, transparent);
+    opacity:0;pointer-events:none;
+    transition:transform .28s cubic-bezier(.2,2.2,.5,1), opacity .18s;
+  }
+  .badge-card.submitted .stamp{opacity:1;transform:translateX(-50%) rotate(-14deg) scale(1)}
+  .badge-card.submitted .card-inner{border-color:var(--accent);background:var(--accent-soft)}
+  .badge-card.spot .card-inner{
+    border-color:var(--amber);
+    box-shadow:0 0 0 4px var(--amber-soft),var(--card-shadow);
+    transform:translateY(-8px);
+  }
+  .ribbon{
+    position:absolute;top:-13px;left:50%;transform:translateX(-50%) scale(0);
+    background:var(--amber);color:#3A2800;border-radius:999px;
+    padding:3px 13px;font-size:12.5px;font-weight:700;white-space:nowrap;z-index:2;
+    box-shadow:var(--card-shadow);
+    transition:transform .3s cubic-bezier(.2,2.4,.5,1);
+  }
+  .badge-card.winner .ribbon{transform:translateX(-50%) scale(1)}
+  .badge-card.winner .card-inner{
+    border-color:var(--amber);
+    box-shadow:0 0 0 4px var(--amber-soft),0 10px 26px rgba(245,166,35,.3);
+    transform:translateY(-8px);
+  }
+  /* 发车走人 */
+  .badge-card.go{transform:translateX(130vw)}
+  .stage.departing .badge-card.go .card-inner{animation:chug .34s linear infinite}
+  @keyframes chug{0%,100%{transform:rotate(0) translateY(0)}25%{transform:rotate(2deg) translateY(-3px)}75%{transform:rotate(-2deg) translateY(-2px)}}
+  .stage.departing .badge-card:not(.submitted){opacity:.28;filter:grayscale(.6)}
+
+  .hint{
+    text-align:center;color:var(--muted);font-size:14.5px;min-height:1.6em;
+    margin:0 0 14px;position:relative;z-index:1;
+  }
+  .hint b{color:var(--accent)}
+  .controls{
+    display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+    padding-bottom:26px;position:relative;z-index:1;
+  }
+  .btn{
+    appearance:none;border:none;cursor:pointer;font:inherit;font-weight:700;
+    border-radius:999px;padding:12px 34px;font-size:17px;
+    background:var(--accent);color:var(--accent-ink);
+    box-shadow:0 6px 18px rgba(11,122,75,.3);
+    transition:transform .15s, box-shadow .15s, opacity .2s;
+  }
+  .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 24px rgba(11,122,75,.35)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+  .btn:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+  .btn.amber{background:var(--amber);color:#3A2800;box-shadow:0 6px 18px rgba(245,166,35,.35)}
+  .btn.ghost{background:transparent;color:var(--muted);box-shadow:none;border:1.5px solid var(--line)}
+
+  /* 站台黄线 */
+  .platform-edge{
+    height:16px;margin:0 -22px;
+    background:repeating-linear-gradient(-45deg,var(--amber) 0 12px,#3A2E14 12px 24px);
+    opacity:.85;
+  }
+  /* 发车完成牌 */
+  .departed-board{
+    position:absolute;inset:0;display:none;z-index:3;
+    align-items:center;justify-content:center;flex-direction:column;gap:14px;
+    background:color-mix(in srgb, var(--surface) 92%, transparent);
+    text-align:center;padding:20px;
+  }
+  .stage.departed .departed-board{display:flex}
+  .departed-inner{
+    background:#101612;border-radius:14px;padding:22px 34px;
+    box-shadow:var(--shadow);animation:flapin .5s both;
+  }
+  .departed-inner .big{
+    color:#4CE08A;text-shadow:0 0 14px rgba(76,224,138,.5);
+    font-size:clamp(22px,4.5vw,32px);
+  }
+  .departed-inner .rows{color:#FFC94D;text-shadow:0 0 8px rgba(255,201,77,.4);font-size:14.5px;margin-top:10px;line-height:2}
+  .demo-note{
+    margin-top:16px;padding:14px 18px;border-radius:12px;
+    background:var(--amber-soft);border:1px dashed var(--amber);
+    font-size:14.5px;line-height:1.7;
+  }
+
+  /* ============ 内容组件 ============ */
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:18px 0}
+  .cardbox{
+    background:var(--surface);border:1.5px solid var(--line);border-radius:14px;
+    padding:18px 18px 14px;box-shadow:var(--card-shadow);
+  }
+  .cardbox.hot{border-color:var(--accent);background:var(--accent-soft)}
+  .cardbox .k{font-size:17px;font-weight:700;margin-bottom:4px}
+  .cardbox .v{font-size:14px;color:var(--muted);line-height:1.7}
+  .cardbox .tag{
+    display:inline-block;font-size:11.5px;letter-spacing:.12em;border-radius:999px;
+    padding:2px 10px;margin-bottom:10px;font-weight:500;
+    background:var(--bg);color:var(--muted);border:1px solid var(--line);
+  }
+  .cardbox.hot .tag{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+  /* 车票 */
+  .tickets{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+  .ticket{
+    position:relative;display:flex;align-items:center;gap:16px;
+    background:var(--surface);border:1.5px solid var(--line);border-radius:12px;
+    padding:14px 20px;box-shadow:var(--card-shadow);
+  }
+  .ticket::before,.ticket::after{
+    content:"";position:absolute;width:18px;height:18px;border-radius:50%;
+    background:var(--bg);border:1.5px solid var(--line);top:50%;
+  }
+  .ticket::before{left:-10px;transform:translateY(-50%);border-left-color:transparent}
+  .ticket::after{right:-10px;transform:translateY(-50%);border-right-color:transparent}
+  .ticket .fare{
+    flex:none;width:74px;text-align:center;font-weight:700;font-size:18px;
+    border-right:1.5px dashed var(--line);padding-right:14px;
+  }
+  .ticket .fare small{display:block;font-size:11px;color:var(--muted);font-weight:400;letter-spacing:.1em}
+  .ticket.f3 .fare{color:var(--danger)}
+  .ticket.f2 .fare{color:var(--amber)}
+  .ticket.f1 .fare{color:var(--accent)}
+  .ticket .tk{font-weight:700;font-size:15.5px}
+  .ticket .tv{font-size:13.5px;color:var(--muted)}
+  .conclusion{
+    display:flex;align-items:center;gap:10px;margin-top:16px;
+    font-weight:700;color:var(--accent);font-size:16.5px;
+  }
+  .conclusion::before{content:"";flex:none;width:26px;height:4px;border-radius:2px;background:var(--accent)}
+
+  /* 机制零件 */
+  .parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin:20px 0}
+  .part{
+    background:var(--surface);border:1.5px solid var(--line);border-radius:14px;
+    padding:16px 18px;box-shadow:var(--card-shadow);
+  }
+  .part .no{
+    font-size:13px;color:var(--accent);letter-spacing:.1em;font-weight:700;
+  }
+  .part .pk{font-size:18px;font-weight:700;margin:2px 0 2px}
+  .part .risk{
+    display:inline-block;font-size:12.5px;color:var(--accent);background:var(--accent-soft);
+    border-radius:999px;padding:2px 11px;margin:4px 0 8px;font-weight:500;
+  }
+  .part .pv{font-size:14px;color:var(--muted);line-height:1.7}
+
+  /* 时刻表 */
+  .timetable{overflow-x:auto;margin:20px 0;padding-bottom:6px}
+  .timetable-inner{display:flex;align-items:stretch;min-width:640px}
+  .tt-stop{flex:1;position:relative;padding:0 8px;text-align:center}
+  .tt-stop::before{
+    content:"";position:absolute;top:7px;left:0;right:0;height:3px;background:var(--accent);opacity:.3;
+  }
+  .tt-stop:first-child::before{left:50%}
+  .tt-stop:last-child::before{right:50%}
+  .tt-dot{
+    position:relative;width:15px;height:15px;border-radius:50%;margin:0 auto 10px;
+    background:var(--bg);border:3.5px solid var(--accent);z-index:1;
+  }
+  .tt-stop:last-child .tt-dot{background:var(--accent)}
+  .tt-time{font-size:14px;color:var(--accent);font-weight:700}
+  .tt-name{font-size:14.5px;font-weight:700;margin-top:2px}
+  .tt-desc{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.6}
+
+  /* 边界 */
+  .nots{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+  .not{
+    display:flex;gap:14px;align-items:baseline;
+    background:var(--surface);border:1.5px solid var(--line);border-radius:12px;
+    padding:14px 18px;box-shadow:var(--card-shadow);
+  }
+  .not .x{
+    flex:none;width:26px;height:26px;border-radius:50%;position:relative;top:5px;
+    background:color-mix(in srgb, var(--danger) 14%, var(--surface));
+    color:var(--danger);display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:15px;
+  }
+  .not .nk{font-weight:700}
+  .not .nv{font-size:14px;color:var(--muted)}
+
+  /* 假设 */
+  .hyps{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+  .hyp{
+    background:var(--surface);border:1.5px solid var(--line);border-radius:12px;
+    padding:14px 18px;box-shadow:var(--card-shadow);
+    display:flex;gap:14px;align-items:baseline;
+  }
+  .hyp.vital{border-color:var(--amber)}
+  .hyp .num{flex:none;font-weight:700;color:var(--muted);font-size:14px;width:2.4em}
+  .hyp .hk{font-weight:700}
+  .hyp .hv{font-size:14px;color:var(--muted);margin-top:2px}
+  .vital-chip{
+    display:inline-block;background:var(--amber);color:#3A2800;border-radius:999px;
+    font-size:11.5px;font-weight:700;padding:1px 10px;margin-left:8px;
+    letter-spacing:.1em;vertical-align:2px;
+  }
+
+  footer{
+    text-align:center;color:var(--muted);font-size:13.5px;
+    padding:30px 20px 60px;line-height:2;
+  }
+  footer .fbrand{font-size:19px;color:var(--ink)}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s, transform .6s}
+  .reveal.in{opacity:1;transform:none}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+
+<div lang="zh-CN">
+
+  <!-- ================= HERO ================= -->
+  <header class="hero wrap">
+    <div class="eyebrow mono">黑客松「准点下班」参赛概念</div>
+
+    <div class="board" id="heroBoard" aria-label="发车信息牌">
+      <table>
+        <thead>
+          <tr><th>车次</th><th>开往</th><th>发车时间</th><th>检票口</th><th>状态</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono flaprow">G604</td>
+            <td class="disp flaprow">家</td>
+            <td class="mono flaprow">18:00</td>
+            <td class="disp flaprow">工位 A 区</td>
+            <td class="ok disp flaprow">准点</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h1 class="disp">下班<span class="go-char">发车</span></h1>
+    <p class="lede">大家都做完了，都想走，但都在等第一个站起来的人。<br>
+    「下班发车」把<b>第一个走</b>从需要勇气的个人行为，变成系统派发的角色。</p>
+
+    <div class="pitch-words disp">
+      <span class="w">不用老板批准</span><span class="sep">▶</span>
+      <span class="w">三个同事</span><span class="sep">▶</span>
+      <span class="w hot">就能发一班车</span>
+    </div>
+  </header>
+
+  <!-- ================= 线路 ================= -->
+  <div class="rail wrap">
+
+    <!-- 始发站：DEMO -->
+    <section class="station" id="demo">
+      <div class="station-mark"></div>
+      <div class="station-label mono">始发站</div>
+      <h2 class="disp">别先看逻辑，先发一班车</h2>
+      <p class="sub">这个仪式要是不好玩，后面的一切都不成立。点亮做完活的同事，凑一班车试试。</p>
+
+      <div class="stage-outer">
+        <div class="stage" id="stage">
+          <div class="stage-head">
+            <span class="led-chip mono">车次 G604</span>
+            <span class="led-chip mono">已投卡 <b id="countLed">0</b> / 6</span>
+            <span class="led-chip mono">发车 18:00</span>
+          </div>
+
+          <div class="cards" id="cards"></div>
+
+          <p class="hint" id="hint">点工牌投卡 · 满 3 人可开奖</p>
+
+          <div class="controls">
+            <button class="btn" id="drawBtn" disabled>到点开奖 · 还差 3 人</button>
+            <button class="btn amber" id="departBtn" hidden>发车！</button>
+          </div>
+
+          <div class="platform-edge" aria-hidden="true"></div>
+
+          <div class="departed-board">
+            <div class="departed-inner mono">
+              <div class="big disp">G604 已准点发出</div>
+              <div class="rows" id="departedRows"></div>
+            </div>
+            <button class="btn ghost" id="resetBtn">再发一班车</button>
+          </div>
+
+          <canvas id="confetti" style="position:absolute;inset:0;pointer-events:none;z-index:4"></canvas>
+        </div>
+
+        <div class="demo-note">
+          <strong>为什么这个 demo 是全页最重要的部分：</strong>产品的头号生死假设是「仪式感 + 轮换的价值，必须大于群里喊一声『走了走了』的便利」。这个假设没法用 PPT 论证，只能用手感验证——你刚才玩的这一遍，就是第一次验证。
+        </div>
+      </div>
+    </section>
+
+    <!-- 第 1 站 -->
+    <section class="station reveal">
+      <div class="station-mark"></div>
+      <div class="station-label mono">第 1 站 · 问题</div>
+      <h2 class="disp">三种加班，只解一种</h2>
+      <p class="sub">到点没人走，其实是三个不同的问题混在一起。切开，只打其中一个。</p>
+
+      <div class="grid3">
+        <div class="cardbox">
+          <span class="tag">不管</span>
+          <div class="k">真有活没干完</div>
+          <div class="v">这是排期问题，不是协调问题。任何下班工具都救不了。</div>
+        </div>
+        <div class="cardbox">
+          <span class="tag">只稀释，不正面解</span>
+          <div class="k">怕老板，不敢走</div>
+          <div class="v">垂直压力。产品不硬刚，用集体性来稀释个人风险。</div>
+        </div>
+        <div class="cardbox hot">
+          <span class="tag">靶心</span>
+          <div class="k">都想走，在互相等</div>
+          <div class="v">纯粹的协调博弈：所有人偏好一致，缺的只是一个启动信号。经典的「第一只企鹅」问题。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第 2 站 -->
+    <section class="station reveal">
+      <div class="station-mark"></div>
+      <div class="station-label mono">第 2 站 · 原理</div>
+      <h2 class="disp">风险守恒定律</h2>
+      <p class="sub">第一个走的人独自承担全部社会风险。这份风险<strong>消灭不了，只能搬运</strong>——所以产品设计的真正命题是：把它搬到结算最便宜的地方。</p>
+
+      <div class="tickets">
+        <div class="ticket f3">
+          <div class="fare">¥¥¥<small>最贵</small></div>
+          <div><div class="tk">当众第一个站起来走</div><div class="tv">全办公室看着你，独自买单「态度问题」</div></div>
+        </div>
+        <div class="ticket f2">
+          <div class="fare">¥¥<small>还是贵</small></div>
+          <div><div class="tk">当着全公司提交工牌</div><div class="tv">公开宣告「我想走」——风险只是从下班时刻提前到了提交时刻</div></div>
+        </div>
+        <div class="ticket f1">
+          <div class="fare">¥<small>最便宜</small></div>
+          <div><div class="tk">私下跟熟人约一班车</div><div class="tv">一句「要不要一起准点走」，说给信得过的人，几乎零成本</div></div>
+        </div>
+      </div>
+
+      <div class="conclusion">所以：不用老板批准，从熟人组队开始。</div>
+    </section>
+
+    <!-- 第 3 站 -->
+    <section class="station reveal">
+      <div class="station-mark"></div>
+      <div class="station-label mono">第 3 站 · 机制</div>
+      <h2 class="disp">四个零件，各拆一段风险</h2>
+      <p class="sub">从约定到出门，风险路径上有四道坎。四个机制零件一坎一个——每个零件都必须能回答「你在解哪个问题」，答不上来的就是装饰品。</p>
+
+      <div class="parts">
+        <div class="part">
+          <div class="no mono">零件 1</div>
+          <div class="pk">私下组队</div>
+          <div class="risk">拆「敢不敢约」</div>
+          <div class="pv">把「当众表态想走」换成「私下跟信得过的同事约定」。风险在最便宜的地方结算。</div>
+        </div>
+        <div class="part">
+          <div class="no mono">零件 2</div>
+          <div class="pk">投工牌</div>
+          <div class="risk">拆「当天缩不缩」</div>
+          <div class="pv">承诺装置。把卡投进去，就是当着队友的面锁定今天。工牌是象征物，不接公司系统。</div>
+        </div>
+        <div class="part">
+          <div class="no mono">零件 3</div>
+          <div class="pk">随机抽发车人</div>
+          <div class="risk">拆「谁先站起来」</div>
+          <div class="pv">责任轮换。今天你带队是系统抽的，不是你选的——没人积累「总是先走的那个」的名声。</div>
+        </div>
+        <div class="part">
+          <div class="no mono">零件 4</div>
+          <div class="pk">集体出发</div>
+          <div class="risk">拆「站起来之后怕不怕」</div>
+          <div class="pv">法不责众。一个人六点整站起来是态度问题，五个人一起站起来，只是下班。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第 4 站 -->
+    <section class="station reveal">
+      <div class="station-mark"></div>
+      <div class="station-label mono">第 4 站 · 单日闭环</div>
+      <h2 class="disp">一天怎么跑</h2>
+
+      <div class="timetable">
+        <div class="timetable-inner">
+          <div class="tt-stop"><div class="tt-dot"></div><div class="tt-time mono">17:30</div><div class="tt-name">投卡</div><div class="tt-desc">干完活的人<br>投出工牌</div></div>
+          <div class="tt-stop"><div class="tt-dot"></div><div class="tt-time mono">18:00</div><div class="tt-name">开奖</div><div class="tt-desc">到点自动抽出<br>今日发车人</div></div>
+          <div class="tt-stop"><div class="tt-dot"></div><div class="tt-time mono">18:01</div><div class="tt-name">集合</div><div class="tt-desc">发车人收到发车令<br>起身集合队伍</div></div>
+          <div class="tt-stop"><div class="tt-dot"></div><div class="tt-time mono">18:02</div><div class="tt-name">发车</div><div class="tt-desc">全队一起<br>走出办公室</div></div>
+          <div class="tt-stop"><div class="tt-dot"></div><div class="tt-time mono">18:03</div><div class="tt-name">streak +1</div><div class="tt-desc">连续准点发车<br>纪录续上，明天再会</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第 5 站 -->
+    <section class="station reveal">
+      <div class="station-mark"></div>
+      <div class="station-label mono">第 5 站 · 跑起来之后</div>
+      <h2 class="disp">留存、增长、天花板</h2>
+
+      <div class="grid3">
+        <div class="cardbox">
+          <span class="tag">留存</span>
+          <div class="k">streak 纪录</div>
+          <div class="v">连续发车纪录 + 抽签的新鲜感，回答「为什么不退化回群里喊一声」。这是头号生死题，仪式感必须做足。</div>
+        </div>
+        <div class="cardbox">
+          <span class="tag">增长</span>
+          <div class="k">发车即广告</div>
+          <div class="v">一支小队每天准点、仪式感十足地集体出门，就是办公室里最好的广告。隔壁组必然来问。组到组传播，零获客成本。</div>
+        </div>
+        <div class="cardbox">
+          <span class="tag">天花板</span>
+          <div class="k">企业版收编</div>
+          <div class="v">草根铺开后，HR 以加班合规 / 文化建设的名义官方引入。Slack 式自底向上进企业——这页讲给评委听。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第 6 站 -->
+    <section class="station reveal">
+      <div class="station-mark"></div>
+      <div class="station-label mono">第 6 站 · 边界</div>
+      <h2 class="disp">三件明确不做的事</h2>
+
+      <div class="nots">
+        <div class="not"><div class="x">✕</div><div><span class="nk">不解决真实工作量</span> — <span class="nv">那是排期问题，不是协调问题。</span></div></div>
+        <div class="not"><div class="x">✕</div><div><span class="nk">不正面对抗老板</span> — <span class="nv">只用集体性稀释个人风险，不替员工出头。</span></div></div>
+        <div class="not"><div class="x">✕</div><div><span class="nk">不做监控</span> — <span class="nv">数据只在小组内可见。老板能看到「谁天天投卡」的那一刻，产品性质立刻反转。</span></div></div>
+      </div>
+    </section>
+
+    <!-- 终点站 -->
+    <section class="station terminal reveal">
+      <div class="station-mark"></div>
+      <div class="station-label mono">终点站 · 假设清单</div>
+      <h2 class="disp">评委会戳的四个地方</h2>
+      <p class="sub">整条逻辑链成立的前提。其中两条是命门：一条决定问题存不存在，一条决定产品配不配存在。</p>
+
+      <div class="hyps">
+        <div class="hyp vital">
+          <div class="num mono">H1</div>
+          <div>
+            <div class="hk">「互相等」型加班在目标场景占比可观<span class="vital-chip">命门</span></div>
+            <div class="hv">验证法：黑客松现场问 20 个人「你不准点走，主要在等谁」——一小时出结果，比闷头写八小时代码值钱。</div>
+          </div>
+        </div>
+        <div class="hyp">
+          <div class="num mono">H2</div>
+          <div>
+            <div class="hk">集体走确实比单独走安全</div>
+            <div class="hv">法不责众要成立。五个人一起出门必须真的比一个人出门压力小。</div>
+          </div>
+        </div>
+        <div class="hyp vital">
+          <div class="num mono">H3</div>
+          <div>
+            <div class="hk">仪式感 + 轮换 &gt; 群里喊一声<span class="vital-chip">命门</span></div>
+            <div class="hv">本页始发站的 demo 就是对它的第一次验证——不好玩，就重做，直到好玩为止。</div>
+          </div>
+        </div>
+        <div class="hyp">
+          <div class="num mono">H4</div>
+          <div>
+            <div class="hk">老板发现后，小组能承受</div>
+            <div class="hv">迟早会被注意到。产品要不要预留一点「合理推诿」空间，值得想。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 问询处 -->
+    <section class="station info reveal">
+      <div class="station-mark"></div>
+      <div class="station-label mono" style="color:var(--amber)">问询处 · 评委必问</div>
+      <h2 class="disp">为什么要抽签？直接所有人一起走不行吗？</h2>
+      <p class="sub">队内真实提问，评委大概率也会问。答案分两步：先戳破一个假设，再看抽签真正干的三份工。</p>
+
+      <div class="cardbox" style="margin:18px 0">
+        <div class="k">「一起走」是结果，不是动作</div>
+        <div class="v" style="font-size:14.5px">现实里没有五个人同一毫秒起身——总得有人第一个合上电脑、把还在敲消息的人捞起来。到了 18:00 铃一响，每个人都在等别人先动：<strong style="color:var(--ink)">要解决的那个博弈会在 18:00:00 这一秒原样复活</strong>，只是规模缩小了。心理学叫旁观者效应：责任属于所有人，就等于不属于任何人。反证很简单——如果说好了就能自动一起走，群里喊一声早就够了，可「谁来喊那一声」恰恰就是问题本身。</div>
+      </div>
+
+      <div class="grid3">
+        <div class="cardbox">
+          <span class="tag">工作 1</span>
+          <div class="k">点火器</div>
+          <div class="v">随机指定「今天谁负责第一个站起来、把人凑齐」。把模糊的集体意愿，压成一个具体的、有名字的执行责任。</div>
+        </div>
+        <div class="cardbox">
+          <span class="tag">工作 2</span>
+          <div class="k">责任洗白机</div>
+          <div class="v">不抽的话，每天先动的必然是最胆大的那个，一周后他就成了「总是带头走的」。随机轮换让名声摊薄给骰子：系统抽的，不是我选的。</div>
+        </div>
+        <div class="cardbox">
+          <span class="tag">工作 3</span>
+          <div class="k">好玩引擎</div>
+          <div class="v">开奖三秒的悬念是仪式唯一的戏剧时刻、每天的变量。删掉它，产品退化成群闹钟，H3 命门当场破掉。</div>
+        </div>
+      </div>
+
+      <div class="conclusion">抽的不是「谁可以走」——投了卡的全都走。抽的是「谁来按启动键」。</div>
+
+      <div class="demo-note" style="margin-top:18px">
+        <strong>边角设计：</strong>发车人 17:59 被老板拽住怎么办？给一次「婉拒重抽」。别让单点故障黄掉整班车。
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="fbrand disp">下班<span style="color:var(--accent)">发车</span></div>
+    泽轩604 · 黑客松「准点下班」<br>
+    本页只有一个 KPI：让你看完想立刻发一班车
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- hero 发车牌翻牌入场 ---------- */
+  if(!reduceMotion){
+    var cells = document.querySelectorAll(".flaprow");
+    var delay = 0;
+    cells.forEach(function(td){
+      var text = td.textContent;
+      td.textContent = "";
+      for(var i=0;i<text.length;i++){
+        var s = document.createElement("span");
+        s.className = "flap";
+        s.textContent = text[i];
+        s.style.animationDelay = (delay*0.045)+"s";
+        td.appendChild(s);
+        delay++;
+      }
+    });
+  }
+
+  /* ---------- 滚动浮现 ---------- */
+  if("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    },{threshold:0.12});
+    document.querySelectorAll(".reveal").forEach(function(el){ io.observe(el); });
+  }else{
+    document.querySelectorAll(".reveal").forEach(function(el){ el.classList.add("in"); });
+  }
+
+  /* ---------- 音效（用户手势触发，静默降级） ---------- */
+  var actx = null;
+  function beep(freq, dur, vol, type, when){
+    try{
+      actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = type||"sine"; o.frequency.value = freq;
+      o.connect(g); g.connect(actx.destination);
+      var t = actx.currentTime + (when||0);
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.start(t); o.stop(t+dur+0.03);
+    }catch(e){}
+  }
+  var sTick   = function(){ beep(1250,0.045,0.018,"square"); };
+  var sSubmit = function(){ beep(720,0.09,0.05,"triangle"); };
+  var sWin    = function(){ beep(880,0.16,0.07,"triangle"); beep(1320,0.3,0.07,"triangle",0.14); };
+  var sDepart = function(){ beep(660,0.18,0.08,"triangle"); beep(880,0.34,0.08,"triangle",0.18); };
+
+  /* ---------- 彩带 ---------- */
+  var stage = document.getElementById("stage");
+  var canvas = document.getElementById("confetti");
+  var cctx = canvas.getContext("2d");
+  var parts = [], raf = null;
+  var colors = ["#0B7A4B","#37C07D","#F5A623","#FFC94D","#4CE08A","#FFFFFF"];
+  function sizeCanvas(){
+    canvas.width = stage.clientWidth;
+    canvas.height = stage.clientHeight;
+  }
+  function burst(x,y,n){
+    if(reduceMotion) return;
+    sizeCanvas();
+    for(var i=0;i<n;i++){
+      parts.push({
+        x:x, y:y,
+        vx:(Math.random()-0.5)*10, vy:-Math.random()*9-3,
+        g:0.3, s:4+Math.random()*5,
+        r:Math.random()*Math.PI, vr:(Math.random()-0.5)*0.3,
+        c:colors[i%colors.length], life:60+Math.random()*45
+      });
+    }
+    if(!raf) frame();
+  }
+  function frame(){
+    cctx.clearRect(0,0,canvas.width,canvas.height);
+    parts = parts.filter(function(p){ return p.life>0 && p.y < canvas.height+30; });
+    parts.forEach(function(p){
+      p.x+=p.vx; p.y+=p.vy; p.vy+=p.g; p.r+=p.vr; p.life--;
+      cctx.save(); cctx.translate(p.x,p.y); cctx.rotate(p.r);
+      cctx.fillStyle=p.c; cctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.62);
+      cctx.restore();
+    });
+    raf = parts.length ? requestAnimationFrame(frame) : null;
+  }
+
+  /* ---------- 工牌数据与渲染 ---------- */
+  var CREW = [
+    {emoji:"🧑‍💻", name:"阿轩", role:"已完成今日份"},
+    {emoji:"🧔",   name:"老王", role:"已完成今日份"},
+    {emoji:"👩‍🎨", name:"Momo", role:"已完成今日份"},
+    {emoji:"👨‍🔧", name:"大鹏", role:"已完成今日份"},
+    {emoji:"👧",   name:"七七", role:"已完成今日份"},
+    {emoji:"😎",   name:"你",   role:"就等一班车"}
+  ];
+  var cardsWrap = document.getElementById("cards");
+  var cardEls = [];
+  CREW.forEach(function(c, i){
+    var b = document.createElement("button");
+    b.className = "badge-card";
+    b.type = "button";
+    b.setAttribute("aria-pressed","false");
+    b.innerHTML =
+      '<span class="ribbon disp">🚩 今日发车人</span>' +
+      '<span class="card-inner">' +
+        '<span class="avatar">'+c.emoji+'</span>' +
+        '<span class="bname">'+c.name+'</span>' +
+        '<span class="brole" style="display:block">'+c.role+'</span>' +
+        '<span class="barcode" style="display:block"></span>' +
+        '<span class="stamp disp">已投卡</span>' +
+      '</span>';
+    b.addEventListener("click", function(){ toggleCard(i); });
+    cardsWrap.appendChild(b);
+    cardEls.push(b);
+  });
+
+  /* ---------- 状态机 ---------- */
+  var phase = "boarding";           // boarding → drawing → drawn → departing → departed
+  var submitted = [];
+  var winner = -1;
+  var MIN = 3;
+
+  var countLed  = document.getElementById("countLed");
+  var hint      = document.getElementById("hint");
+  var drawBtn   = document.getElementById("drawBtn");
+  var departBtn = document.getElementById("departBtn");
+  var resetBtn  = document.getElementById("resetBtn");
+  var departedRows = document.getElementById("departedRows");
+
+  function streakGet(){ try{ return parseInt(localStorage.getItem("fache-streak")||"0",10)||0; }catch(e){ return 0; } }
+  function streakSet(v){ try{ localStorage.setItem("fache-streak", String(v)); }catch(e){} }
+
+  function refresh(){
+    countLed.textContent = submitted.length;
+    if(phase==="boarding"){
+      if(submitted.length < MIN){
+        drawBtn.disabled = true;
+        drawBtn.textContent = "到点开奖 · 还差 "+(MIN-submitted.length)+" 人";
+        hint.textContent = "点工牌投卡 · 满 "+MIN+" 人可开奖";
+      }else{
+        drawBtn.disabled = false;
+        drawBtn.textContent = "到点开奖";
+        hint.textContent = "人齐了！也可以继续拉人，然后开奖";
+      }
+    }
+  }
+
+  function toggleCard(i){
+    if(phase!=="boarding") return;
+    var el = cardEls[i];
+    var idx = submitted.indexOf(i);
+    if(idx>=0){
+      submitted.splice(idx,1);
+      el.classList.remove("submitted");
+      el.setAttribute("aria-pressed","false");
+    }else{
+      submitted.push(i);
+      el.classList.add("submitted");
+      el.setAttribute("aria-pressed","true");
+      sSubmit();
+    }
+    refresh();
+  }
+
+  drawBtn.addEventListener("click", function(){
+    if(phase!=="boarding" || submitted.length<MIN) return;
+    phase = "drawing";
+    drawBtn.disabled = true;
+    hint.textContent = "正在抽今日发车人…";
+    var list = submitted.slice();
+    var n = list.length;
+    var winPos = Math.floor(Math.random()*n);
+    var total = reduceMotion ? winPos : n*3 + winPos;
+    var cur = -1;
+    function step(){
+      if(cur>=0) cardEls[list[cur%n]].classList.remove("spot");
+      cur++;
+      var el = cardEls[list[cur%n]];
+      el.classList.add("spot");
+      sTick();
+      if(cur>=total){
+        el.classList.remove("spot");
+        finishDraw(list[cur%n]);
+        return;
+      }
+      var p = cur/Math.max(total,1);
+      setTimeout(step, 70 + Math.pow(p,3)*400);
+    }
+    step();
+  });
+
+  function finishDraw(w){
+    winner = w;
+    phase = "drawn";
+    var el = cardEls[w];
+    el.classList.add("winner");
+    sWin();
+    var sr = stage.getBoundingClientRect();
+    var cr = el.getBoundingClientRect();
+    burst(cr.left - sr.left + cr.width/2, cr.top - sr.top + cr.height/2, 90);
+    hint.innerHTML = "🚩 系统抽中 <b>"+CREW[w].name+"</b> 带队——全队都走，TA 只是按启动键的";
+    drawBtn.hidden = true;
+    departBtn.hidden = false;
+  }
+
+  departBtn.addEventListener("click", function(){
+    if(phase!=="drawn") return;
+    phase = "departing";
+    departBtn.disabled = true;
+    hint.textContent = "全队出发，跨过站台黄线——";
+    stage.classList.add("departing");
+    sDepart();
+    var order = [winner].concat(submitted.filter(function(i){ return i!==winner; }));
+    order.forEach(function(idx,k){
+      var el = cardEls[idx];
+      el.style.transitionDelay = (k*140)+"ms";
+      el.classList.add("go");
+    });
+    var wait = reduceMotion ? 200 : order.length*140 + 1000;
+    setTimeout(showDeparted, wait);
+  });
+
+  function showDeparted(){
+    phase = "departed";
+    var streak = streakGet()+1;
+    streakSet(streak);
+    departedRows.innerHTML =
+      "发车人 "+CREW[winner].name+" · 全队 "+submitted.length+" 人 · 准点率 100%<br>" +
+      "连续准点发车 <b style='color:#4CE08A'>"+streak+"</b> 班 · 下一班 明天 18:00";
+    stage.classList.add("departed");
+    sizeCanvas();
+    burst(canvas.width/2, canvas.height/3, 70);
+  }
+
+  resetBtn.addEventListener("click", function(){
+    stage.classList.remove("departed","departing");
+    cardEls.forEach(function(el){
+      var inner = el.style;
+      el.classList.add("noanim");
+      el.style.transition = "none";
+      el.classList.remove("go","winner","spot","submitted");
+      el.setAttribute("aria-pressed","false");
+      el.style.transitionDelay = "";
+      void el.offsetWidth;
+      el.style.transition = "";
+    });
+    submitted = [];
+    winner = -1;
+    phase = "boarding";
+    drawBtn.hidden = false;
+    drawBtn.disabled = true;
+    departBtn.hidden = true;
+    departBtn.disabled = false;
+    refresh();
+  });
+
+  window.addEventListener("resize", function(){ if(parts.length) sizeCanvas(); });
+  refresh();
+})();
+</script>

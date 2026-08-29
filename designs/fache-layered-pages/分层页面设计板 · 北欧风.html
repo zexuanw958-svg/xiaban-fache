@@ -1,0 +1,1392 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>下班发车 · 分层页面 · 北欧风</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8E5E0; --panel:#E2DFD9; --paper:#FBF9F6; --paper2:#F4F1EC;
+  --ink:#211E1A; --mut:#8D867C; --soft:#5F584D; --line:#DAD5CC; --faint:#EFECE6;
+  --caramel:#C6884A; --caramel-d:#8A5A26; --caramel-p:#F0E2CE;
+  --brown:#78441F;
+  --amber:#E2A64F; --amber-d:#9C6F22; --amber-p:#F5E7CC;
+  --gold:#D9A13B; --gold-d:#8F6410; --gold-p:#F3E6C6;
+  --orange:#EF8A1E; --orange-d:#C96E12; --orange-p:#F9E3C4;
+  --blue:#4E7ECF; --blue-d:#3A62A6; --blue-p:#DCE5F4;
+  --pink:#EFA6BE; --pink-d:#C87795; --pink-p:#F8E2EA;
+  --graphite:#3A3631; --gray:#9C978F; --frost:#8FA6BB; --frost-p:#E2EAF1;
+  --num:"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --shadow-lg:0 20px 44px rgba(48,39,26,.11);
+  --shadow:0 10px 24px rgba(48,39,26,.09);
+  --shadow-sm:0 3px 10px rgba(48,39,26,.07);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","PingFang SC",-apple-system,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+img,svg{display:block}
+.board{max-width:1500px;margin:0 auto;padding:72px 48px 160px}
+
+/* ---------- board chrome ---------- */
+.bhead .kick{font:600 12px var(--mono);letter-spacing:.26em;color:var(--mut);text-transform:uppercase}
+.bhead h1{margin:14px 0 10px;font-size:46px;font-weight:900;letter-spacing:.05em;line-height:1.2}
+.bhead h1 span{color:var(--caramel)}
+.bhead .lede{max-width:820px;margin:0;color:var(--soft);font-size:15px}
+.bmeta{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.bmeta i{font:600 11px var(--mono);font-style:normal;background:var(--paper);border-radius:999px;padding:7px 14px;color:var(--soft);box-shadow:var(--shadow-sm)}
+.sec{margin-top:104px}
+.shead{display:flex;align-items:baseline;gap:16px;margin-bottom:10px}
+.shead .no{font:700 12px var(--mono);letter-spacing:.18em;color:var(--caramel)}
+.shead h2{margin:0;font-size:27px;font-weight:900;letter-spacing:.05em}
+.shead .en{font:500 11px var(--mono);letter-spacing:.24em;color:var(--mut);text-transform:uppercase}
+.slede{margin:0 0 34px;color:var(--mut);font-size:13.5px;max-width:780px}
+
+/* ---------- hero shelf scene ---------- */
+.scene{position:relative;height:620px;background:#E6E3DD;border-radius:30px;box-shadow:var(--shadow);overflow:hidden}
+.ledge{position:absolute;left:0;right:0;height:130px;background:#DCD8D1;box-shadow:inset 0 16px 20px -12px rgba(50,40,25,.30)}
+.ledge.l1{top:230px}.ledge.l2{top:490px}
+.scat{position:absolute;filter:drop-shadow(0 8px 12px rgba(48,39,26,.16))}
+.plab{position:absolute;text-align:center;width:150px;transform:translateX(-50%)}
+.plab i{display:block;font:700 10px var(--mono);letter-spacing:.2em;color:var(--mut);font-style:normal}
+.plab b{display:inline-block;margin-top:5px;font-size:12.5px;font-weight:800;letter-spacing:.1em;padding:4px 12px;border-radius:999px;color:#fff;background:var(--pc)}
+.scene .scaption{position:absolute;left:28px;top:22px;font:600 11px var(--mono);letter-spacing:.22em;color:#A39C90;text-transform:uppercase}
+
+/* ---------- tokens / design language ---------- */
+.langgrid{display:grid;grid-template-columns:minmax(560px,1.35fr) minmax(360px,1fr);gap:36px;align-items:start}
+.tokencol{display:flex;flex-direction:column;gap:22px}
+.tcard{background:var(--paper);border-radius:24px;padding:24px 26px;box-shadow:var(--shadow-sm)}
+.tcard h4{margin:0 0 4px;font-size:14px;font-weight:800;letter-spacing:.08em}
+.tcard .ten{font:500 10px var(--mono);letter-spacing:.2em;color:var(--mut);text-transform:uppercase}
+.swrow{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:16px}
+.sw{text-align:center}
+.sw i{display:block;height:52px;border-radius:14px;background:var(--c);box-shadow:inset 0 0 0 1px rgba(33,30,26,.05)}
+.sw b{display:block;font-size:10.5px;font-weight:700;margin-top:7px;letter-spacing:.04em}
+.sw em{display:block;font:500 9px var(--mono);color:var(--mut);font-style:normal;margin-top:1px}
+.rulelist{margin:14px 0 0;padding:0;list-style:none;font-size:12.5px;color:var(--soft)}
+.rulelist li{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.rulelist li:last-child{border:0}
+.rulelist li::before{content:"—";color:var(--caramel);font-weight:700;flex:0 0 auto}
+.dnarow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+.dna{background:var(--paper2);border-radius:16px;padding:14px 12px;text-align:center}
+.dna .demo{height:64px;display:grid;place-items:center;margin-bottom:8px}
+.dna b{font-size:11px;font-weight:800;letter-spacing:.06em}
+.dna em{display:block;font:500 9.5px var(--mono);color:var(--mut);font-style:normal;margin-top:2px}
+.refrow{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap}
+.refrow figure{margin:0;flex:1 1 0;min-width:160px}
+.refrow img{width:100%;border-radius:14px;box-shadow:var(--shadow-sm)}
+.refrow figure.tall img{height:158px;object-fit:cover;object-position:center 30%}
+.refrow figcaption{font:500 10px var(--mono);letter-spacing:.12em;color:var(--mut);margin-top:8px;text-align:center}
+
+/* nordic hero ticket */
+.hticket{position:relative;background:var(--paper);border-radius:26px;aspect-ratio:2/1;padding:34px 38px;display:flex;
+ -webkit-mask:radial-gradient(circle 17px at 0 52%,transparent 16px,#000 17px),radial-gradient(circle 17px at 100% 52%,transparent 16px,#000 17px);-webkit-mask-composite:source-in;
+ mask:radial-gradient(circle 17px at 0 52%,transparent 16px,#000 17px),radial-gradient(circle 17px at 100% 52%,transparent 16px,#000 17px);mask-composite:intersect;
+ filter:drop-shadow(0 18px 30px rgba(48,39,26,.13))}
+.ht-left{flex:1.5;display:flex;flex-direction:column}
+.ht-brand{display:flex;align-items:center;gap:13px}
+.ht-brand .bt{font-size:23px;font-weight:900;letter-spacing:.14em}
+.ht-brand .be{display:block;font:600 9.5px var(--mono);letter-spacing:.3em;color:var(--mut);margin-top:2px}
+.ht-time{margin-top:auto}
+.ht-time small{display:block;font-size:11.5px;font-weight:700;letter-spacing:.3em;color:var(--mut)}
+.ht-time b{font:800 104px/1.04 var(--num);letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.ht-date{display:flex;gap:20px;font-size:12.5px;color:var(--soft);font-weight:600;letter-spacing:.06em;margin-top:10px}
+.ht-perf{width:2px;margin:2px 30px;background-image:radial-gradient(circle,#CFC9C0 1.7px,transparent 2px);background-size:3px 15px;background-repeat:repeat-y;background-position:center top}
+.ht-right{flex:1;position:relative;display:flex;flex-direction:column}
+.ht-right small{font-size:11.5px;font-weight:700;letter-spacing:.3em;color:var(--mut)}
+.ht-right .st{font-size:44px;font-weight:900;letter-spacing:.16em;margin-top:6px}
+.ht-right .bar{width:46px;height:6px;border-radius:4px;background:var(--caramel);margin-top:6px}
+.ht-cat{position:absolute;right:-2px;bottom:-14px;width:168px}
+
+/* ---------- layer stack model ---------- */
+.stackwrap{display:flex;gap:64px;align-items:center;flex-wrap:wrap}
+.stack{position:relative;width:560px;height:590px;flex:0 0 auto}
+.sheet{position:absolute;width:250px;height:430px;border-radius:26px;background:rgba(251,249,246,.66);box-shadow:var(--shadow);left:calc(var(--i)*56px);top:calc(146px - var(--i)*28px)}
+.sheet.solid{background:#F0ECE5}
+.sheet .lt{position:absolute;left:9px;top:12px;font:700 10px var(--mono);letter-spacing:.14em;color:#fff;background:var(--lc);border-radius:8px;padding:4px 8px}
+.sheet .mini-top{position:absolute;left:20px;right:20px;top:46px;height:34px;border-radius:10px;background:#EDE9E2}
+.sheet .mini-num{position:absolute;left:0;right:0;top:120px;text-align:center;font:800 58px var(--num);letter-spacing:-.04em;color:#211E1A}
+.sheet .mini-num small{display:block;font:600 9px var(--mono);letter-spacing:.3em;color:var(--mut)}
+.sheet .mini-dock{position:absolute;left:20px;right:20px;bottom:22px;height:44px;border-radius:999px;background:#EDE9E2}
+.sheet .mini-cat{position:absolute;right:14px;bottom:70px;width:110px}
+.sheet .spark{position:absolute;font-size:20px;color:var(--gold)}
+.stacklegend{flex:1;min-width:360px}
+.stacklegend .lrow{background:var(--paper);border-radius:18px;margin-bottom:12px;box-shadow:var(--shadow-sm)}
+
+/* ---------- phase sections ---------- */
+.phase{margin-top:88px}
+.phead{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.phead .pno{font:700 12px var(--mono);letter-spacing:.14em;color:#fff;background:var(--pc);border-radius:999px;padding:7px 15px}
+.phead h3{margin:0;font-size:23px;font-weight:900;letter-spacing:.06em}
+.phead .pen{font:500 11px var(--mono);letter-spacing:.2em;color:var(--mut);text-transform:uppercase}
+.phead p{margin:0;color:var(--mut);font-size:12.5px;flex-basis:100%;max-width:820px}
+.pbody{display:flex;gap:44px;align-items:flex-start;flex-wrap:wrap}
+.phones{display:flex;gap:28px;flex-wrap:wrap}
+.phonecol{display:flex;flex-direction:column;gap:12px}
+.phonecap{font:600 11px var(--mono);letter-spacing:.18em;color:var(--mut);text-align:center}
+
+/* phone */
+.phone{width:390px;flex:0 0 auto;background:#F6F4EF;border:1px solid #D8D3CA;border-radius:56px;padding:10px;box-shadow:var(--shadow-lg)}
+.screen{position:relative;height:824px;border-radius:46px;overflow:hidden;padding:64px 20px 20px;display:flex;flex-direction:column;gap:13px;background:var(--pg,#EFEDE9)}
+.notch{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:102px;height:24px;border-radius:999px;background:#2A2724;z-index:9}
+.sbar{position:absolute;top:17px;left:30px;right:28px;display:flex;justify-content:space-between;align-items:center;z-index:8}
+.sbar b{font:700 12.5px var(--num);letter-spacing:.01em}
+.sbar .si{display:flex;gap:5px;align-items:center}
+.sbar .si i{display:block;border-radius:2px;background:var(--ink)}
+.sbar .si .s1{width:14px;height:9px;clip-path:polygon(0 100%,100% 0,100% 100%)}
+.sbar .si .s2{width:20px;height:10px;border-radius:3px;background:transparent;border:1.5px solid var(--ink);position:relative}
+.sbar .si .s2::after{content:"";position:absolute;left:1.5px;top:1.5px;bottom:1.5px;width:11px;border-radius:1.5px;background:var(--ink)}
+
+/* in-screen shared */
+.stationboard{display:flex;align-items:center;gap:12px;background:var(--paper);border-radius:20px;padding:13px 15px;box-shadow:var(--shadow-sm)}
+.stationboard .bus{flex:0 0 40px}
+.sb-route{flex:1;min-width:0}
+.sb-route b{font-size:16.5px;font-weight:900;letter-spacing:.03em}
+.sb-route span{display:block;font-size:10px;color:var(--mut);letter-spacing:.05em;margin-top:1px}
+.pill{flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:.1em;border-radius:999px;padding:5px 11px;color:var(--pd);background:var(--pp)}
+.statusword{padding:2px 4px 0}
+.statusword small{display:block;font:600 9.5px var(--mono);letter-spacing:.34em;color:var(--mut)}
+.statusword b{font-size:34px;font-weight:900;letter-spacing:.14em;line-height:1.25}
+.statusword .bar{width:40px;height:5px;border-radius:3px;background:var(--ac)}
+.punch{position:relative;background:var(--paper);border-radius:22px;
+ -webkit-mask:radial-gradient(circle 12px at 0 50%,transparent 11px,#000 12px),radial-gradient(circle 12px at 100% 50%,transparent 11px,#000 12px);-webkit-mask-composite:source-in;
+ mask:radial-gradient(circle 12px at 0 50%,transparent 11px,#000 12px),radial-gradient(circle 12px at 100% 50%,transparent 11px,#000 12px);mask-composite:intersect;
+ filter:drop-shadow(0 6px 14px rgba(48,39,26,.10))}
+.perf{height:2px;background-image:radial-gradient(circle,#D3CDC4 1.6px,transparent 1.9px);background-size:13px 3px;background-repeat:repeat-x;background-position:0 center}
+.cdcard{padding:16px 22px 14px;text-align:center}
+.cdcard small{display:block;font:600 10px var(--mono);letter-spacing:.32em;color:var(--mut)}
+.cdcard .dg{font:800 52px/1.1 var(--num);letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.cdcard .dg sup{font-size:17px;letter-spacing:0;font-weight:700;color:var(--mut);vertical-align:30px;margin-right:5px}
+.cdcard .cdnote{font-size:10.5px;color:var(--mut);letter-spacing:.1em;margin-top:2px}
+.wcard{background:var(--paper);border-radius:20px;padding:14px 16px;box-shadow:var(--shadow-sm)}
+.wcard h5{margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:.14em;display:flex;justify-content:space-between;align-items:baseline}
+.wcard h5 em{font:500 9.5px var(--mono);letter-spacing:.14em;color:var(--mut);font-style:normal}
+.streakrow{display:flex;align-items:center;gap:10px}
+.streakrow .n{font:800 34px/1 var(--num);letter-spacing:-.03em}
+.streakrow .lbl{flex:1;min-width:74px;font-size:10.5px;color:var(--soft);font-weight:600;line-height:1.5}
+.stamps{display:flex;gap:6px;margin-left:auto}
+.stamps i{width:18px;height:18px;border-radius:50%;background:var(--caramel);position:relative}
+.stamps i.today{background:var(--gold);outline:2.5px solid var(--gold-p)}
+.stamps i.off{background:transparent;border:2px dashed #CFC9C0}
+.stamps b{position:absolute;left:50%;top:22px;transform:translateX(-50%);font:600 8px var(--mono);color:var(--mut)}
+.stamps{padding-bottom:14px}
+.wall{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.mb{background:var(--paper);border-radius:14px;padding:7px 4px 7px;text-align:center;box-shadow:var(--shadow-sm)}
+.mb i{display:block;width:20px;height:5px;border-radius:3px;background:#DDD8D0;margin:0 auto 6px}
+.mb em{font-size:19px;font-style:normal;display:block}
+.mb b{display:block;font-size:10.5px;font-weight:700;margin-top:3px;letter-spacing:.02em}
+.mb.me{outline:2.5px solid var(--caramel);outline-offset:-2.5px}
+.mb.me b{color:var(--caramel-d)}
+.toast{position:absolute;top:50px;left:16px;right:16px;background:var(--paper);border-radius:16px;padding:10px 13px;display:flex;gap:10px;align-items:center;box-shadow:var(--shadow);z-index:7}
+.toast .tdot{flex:0 0 32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:15px;background:var(--tp,#F0E2CE)}
+.toast p{margin:0;font-size:11.5px;font-weight:700;line-height:1.45}
+.toast p span{display:block;font-weight:500;font-size:10px;color:var(--mut)}
+.catspot{margin-top:auto;position:relative;display:flex;justify-content:flex-end;padding:0 6px}
+.catspot svg{filter:drop-shadow(0 8px 12px rgba(48,39,26,.15))}
+.zzz{position:absolute;font:800 16px var(--num);color:#B9B2A6;letter-spacing:.02em}
+.notecard{background:var(--paper2);border-radius:14px;padding:10px 14px;font-size:10.5px;color:var(--soft);line-height:1.6}
+.notecard b{color:var(--ink)}
+.bigbtn{height:58px;border-radius:999px;display:grid;place-items:center;font-size:16px;font-weight:900;letter-spacing:.3em;color:#fff;background:var(--ac);box-shadow:0 10px 22px var(--acs,rgba(201,110,18,.30))}
+.ghostbtn{height:44px;border-radius:999px;display:grid;place-items:center;font-size:12.5px;font-weight:800;letter-spacing:.16em;color:var(--soft);background:transparent;border:2px solid #CFC9C0}
+
+/* layer legend */
+.layers{flex:1;min-width:340px;max-width:520px;background:var(--paper);border-radius:26px;padding:26px 28px 20px;box-shadow:var(--shadow)}
+.layers h4{margin:0;font-size:15px;font-weight:900;letter-spacing:.08em}
+.layers .sub{font:500 9.5px var(--mono);letter-spacing:.22em;color:var(--mut);text-transform:uppercase}
+.lrow{display:flex;gap:14px;padding:13px 2px;border-bottom:1px dashed var(--line);align-items:flex-start}
+.layers .lrow:last-of-type{border:0}
+.ltag{flex:0 0 42px;height:28px;border-radius:9px;display:grid;place-items:center;font:700 10.5px var(--mono);color:#fff;background:var(--lc);margin-top:2px}
+.lrow .lbody{min-width:0}
+.lrow b{font-size:13px;font-weight:800;letter-spacing:.04em}
+.lrow p{margin:2px 0 0;font-size:11.5px;color:var(--soft);line-height:1.6}
+.lrow em{display:block;font:500 10px var(--mono);color:var(--mut);margin-top:4px;font-style:normal;letter-spacing:.02em}
+.mrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
+.mchip{font:600 10px var(--mono);background:var(--paper2);border-radius:999px;padding:6px 11px;color:#6A6357;letter-spacing:.02em}
+.lt0{--lc:#A79F92}.lt1{--lc:#6E675C}.lt2{--lc:var(--caramel)}.lt3{--lc:var(--orange)}.lt4{--lc:var(--blue)}.lt5{--lc:var(--gold)}
+
+/* boarding pieces */
+.gatezone{display:flex;gap:14px;align-items:stretch}
+.gatezone .gate{flex:0 0 132px;background:var(--paper);border-radius:20px;padding:10px 8px 6px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center}
+.gatezone .gate figcaption{font:600 9px var(--mono);letter-spacing:.16em;color:var(--mut);margin-top:2px}
+.boxcard{flex:1;padding:16px 18px;display:flex;flex-direction:column;justify-content:center}
+.boxcard small{font:600 9.5px var(--mono);letter-spacing:.26em;color:var(--mut);display:block}
+.boxcard .cnt{font:800 40px/1.15 var(--num);letter-spacing:-.02em}
+.boxcard .cnt span{font-size:19px;color:var(--mut);font-weight:700}
+.boxcard .slot{width:100%;height:9px;border-radius:5px;background:#2A2724;margin:9px 0 4px;opacity:.85}
+.boxcard .who{font-size:10px;color:var(--mut);letter-spacing:.04em}
+.flytix{position:relative;height:74px}
+.mt{position:absolute;display:flex;align-items:center;gap:7px;background:var(--paper);border-radius:12px;padding:7px 12px;box-shadow:var(--shadow-sm);font-size:10.5px;font-weight:700;
+ -webkit-mask:radial-gradient(circle 6px at 0 50%,transparent 5px,#000 6px),radial-gradient(circle 6px at 100% 50%,transparent 5px,#000 6px);-webkit-mask-composite:source-in;
+ mask:radial-gradient(circle 6px at 0 50%,transparent 5px,#000 6px),radial-gradient(circle 6px at 100% 50%,transparent 5px,#000 6px);mask-composite:intersect}
+.mt .no{font:700 9.5px var(--mono);color:var(--amber-d);background:var(--amber-p);border-radius:6px;padding:2px 6px}
+.mybadge{display:flex;align-items:center;gap:12px;background:var(--paper);border-radius:18px;padding:13px 16px;box-shadow:var(--shadow);position:relative}
+.mybadge .av{width:42px;height:42px;border-radius:12px;background:var(--caramel-p);display:grid;place-items:center;font-size:22px}
+.mybadge .nm b{display:block;font-size:13.5px;font-weight:900}
+.mybadge .nm span{font-size:9.5px;color:var(--mut);letter-spacing:.14em}
+.mybadge .drag{margin-left:auto;text-align:right;font:600 10px var(--mono);color:var(--amber-d);letter-spacing:.06em;line-height:1.5}
+.mybadge .drag b{font-size:13px;display:block}
+
+/* drawing pieces */
+.drumzone{text-align:center;padding:6px 0 0}
+.revealrow{display:flex;gap:10px;justify-content:center}
+.gt{flex:1;max-width:112px;background:var(--paper);border-radius:16px;padding:12px 8px 10px;text-align:center;box-shadow:var(--shadow-sm);position:relative;overflow:visible}
+.gt.gold{background:linear-gradient(160deg,#F7ECD2,#F1DDB0);box-shadow:0 8px 18px rgba(217,161,59,.28)}
+.gt em{font-size:23px;font-style:normal;display:block}
+.gt b{display:block;font-size:11.5px;font-weight:900;margin-top:3px}
+.gt span{display:block;font:600 8.5px var(--mono);letter-spacing:.16em;color:var(--mut);margin-top:1px}
+.gt .seal{position:absolute;right:-8px;top:-12px;width:44px;height:44px;border-radius:50%;border:2.5px solid var(--gold-d);color:var(--gold-d);display:grid;place-items:center;font-size:9px;font-weight:900;letter-spacing:.06em;transform:rotate(-12deg);background:rgba(251,249,246,.7)}
+.gt .seal::after{content:"";position:absolute;inset:3.5px;border-radius:50%;border:1px solid var(--gold-d)}
+.gt.back{background:repeating-linear-gradient(-45deg,#E9E4DC 0 8px,#F2EEE7 8px 16px)}
+.gt.back .q{font:800 30px var(--num);color:#B9B2A6;padding:10px 0 12px}
+.drawcap{margin:0;text-align:center;font-size:12px;color:var(--soft);font-weight:600;letter-spacing:.06em}
+.drawcap b{color:var(--gold-d)}
+
+/* departing pieces */
+.decree{background:var(--paper);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.decree .gband{height:8px;background:repeating-linear-gradient(90deg,var(--gold) 0 18px,#E9C87E 18px 36px)}
+.decree .dwrap{padding:15px 17px 16px;position:relative}
+.decree small{font:600 9.5px var(--mono);letter-spacing:.26em;color:var(--gold-d)}
+.decree h6{margin:5px 0 3px;font-size:17px;font-weight:900;letter-spacing:.05em}
+.decree p{margin:0;font-size:11px;color:var(--mut)}
+.decree .dseal{position:absolute;right:14px;top:12px;width:54px;height:54px;border-radius:50%;border:2.5px solid var(--gold-d);color:var(--gold-d);display:grid;place-items:center;font-size:11px;font-weight:900;transform:rotate(10deg);letter-spacing:.1em}
+.decree .dseal::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1px solid var(--gold-d)}
+.dbtns{display:flex;gap:10px;margin-top:13px}
+.dbtns .ok{flex:1.4;height:46px;border-radius:999px;background:var(--gold);color:#fff;font-size:13.5px;font-weight:900;letter-spacing:.22em;display:grid;place-items:center;box-shadow:0 8px 18px rgba(217,161,59,.35)}
+.dbtns .no{flex:1;height:46px;border-radius:999px;border:2px solid #CFC9C0;color:var(--soft);font-size:11.5px;font-weight:800;letter-spacing:.06em;display:grid;place-items:center}
+.chk{display:flex;flex-direction:column;gap:9px}
+.ckrow{display:flex;align-items:center;gap:12px;background:var(--paper);border-radius:14px;padding:11px 14px;box-shadow:var(--shadow-sm);font-size:13px;font-weight:700}
+.ckbox{flex:0 0 24px;height:24px;border-radius:8px;border:2.5px solid #CFC9C0;position:relative}
+.ckrow.done .ckbox{background:var(--blue);border-color:var(--blue)}
+.ckrow.done .ckbox::after{content:"";position:absolute;left:6px;top:3px;width:7px;height:11px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(42deg)}
+.ckrow.done span{color:#B4ADA1;text-decoration:line-through;text-decoration-thickness:2px}
+.slide{height:62px;border-radius:999px;background:#E2DED6;box-shadow:inset 0 2px 7px rgba(33,30,26,.09);position:relative;display:flex;align-items:center;justify-content:center}
+.slide .hint{font-size:13px;font-weight:800;letter-spacing:.3em;color:#A79F92;padding-left:66px}
+.slide .thumb{position:absolute;left:6px;top:6px;bottom:6px;width:106px;border-radius:999px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;font-weight:900;letter-spacing:.06em;box-shadow:0 6px 14px rgba(58,98,166,.35)}
+.slide .thumb::after{content:"››";font-size:15px;font-weight:800}
+.condrow{display:flex;gap:9px}
+.cond{flex:1;background:var(--paper);border-radius:14px;padding:11px 8px;text-align:center;box-shadow:var(--shadow-sm)}
+.cond em{font-size:21px;font-style:normal;display:block}
+.cond b{display:block;font-size:11px;font-weight:800;margin-top:3px}
+.cond span{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.08em;border-radius:999px;padding:2px 8px;margin-top:5px;background:var(--blue-p);color:var(--blue-d)}
+.cond.gold span{background:var(--gold-p);color:var(--gold-d)}
+.waitcard{padding:20px 20px 18px;text-align:center}
+.waitcard .wt{font-size:16.5px;font-weight:900;letter-spacing:.06em}
+.waitcard .ws{font-size:11px;color:var(--mut);margin-top:3px}
+.dots{display:inline-flex;gap:5px;margin-left:4px;vertical-align:1px}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--blue)}
+.dots i:nth-child(2){opacity:.55}.dots i:nth-child(3){opacity:.25}
+
+/* departed pieces */
+.traincard{padding:16px 12px 10px}
+.traincard small{display:block;font:600 9.5px var(--mono);letter-spacing:.26em;color:var(--mut);text-align:center;margin-bottom:6px}
+.boardcnt{display:flex;align-items:baseline;justify-content:center;gap:8px;padding:2px 0 6px}
+.boardcnt b{font:800 34px/1 var(--num)}
+.boardcnt span{font-size:12px;color:var(--mut);font-weight:700;letter-spacing:.1em}
+
+/* settled pieces */
+.settle{padding:0;overflow:hidden}
+.settle .sthead{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 12px}
+.settle .sthead b{font-size:15px;font-weight:900;letter-spacing:.04em}
+.settle .sthead span{font:600 10px var(--mono);color:var(--mut);letter-spacing:.1em}
+.settle .stbody{display:flex;align-items:center;gap:11px;padding:16px 70px 16px 18px;position:relative}
+.settle .snum{font:800 42px/1 var(--num);letter-spacing:-.03em;white-space:nowrap}
+.settle .snum small{font-size:14px;color:var(--mut);font-weight:700;letter-spacing:0}
+.settle .sarrow{font:800 20px var(--num);color:var(--caramel)}
+.settle .slbl{flex:1;min-width:0;font-size:10.5px;color:var(--soft);font-weight:600;line-height:1.55}
+.settle .pseal{position:absolute;right:8px;top:50%;transform:translateY(-50%) rotate(-14deg);width:56px;height:56px;border-radius:50%;border:3px solid var(--orange-d);color:var(--orange-d);display:grid;place-items:center;font-size:11px;font-weight:900;letter-spacing:.08em;opacity:.9}
+.settle .pseal::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1.5px solid var(--orange-d)}
+.nextrun{display:flex;justify-content:center;gap:8px;font-size:11px;color:var(--mut);font-weight:600;letter-spacing:.08em}
+
+/* suspended pieces */
+.susp{padding:22px 20px 18px;text-align:center}
+.susp .swt{font-size:19px;font-weight:900;letter-spacing:.1em}
+.susp .sws{font-size:11.5px;color:var(--mut);margin-top:5px;line-height:1.7}
+.freeze{display:flex;align-items:center;gap:13px;background:var(--frost-p);border-radius:18px;padding:14px 17px}
+.freeze .fi{flex:0 0 40px;height:40px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:19px;color:var(--frost)}
+.freeze b{font-size:13px;font-weight:900;color:#41566B}
+.freeze p{margin:1px 0 0;font-size:10.5px;color:#6B7E92}
+
+/* footer handoff */
+.handoff{margin-top:110px;background:var(--paper);border-radius:28px;padding:40px 44px;box-shadow:var(--shadow)}
+.handoff h2{margin:0 0 6px;font-size:22px;font-weight:900;letter-spacing:.06em}
+.hgrid{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;margin-top:22px}
+.handoff ol{margin:0;padding-left:20px;font-size:13px;color:var(--soft)}
+.handoff ol li{margin-bottom:10px}
+.handoff ol b{color:var(--ink)}
+.handoff pre{margin:0;background:#26221D;color:#E8E2D6;border-radius:18px;padding:22px 24px;font:12px/1.75 var(--mono);overflow-x:auto}
+.handoff pre i{color:#A79F92;font-style:normal}
+.handoff pre b{color:#EEC989;font-weight:600}
+/* ---------- principles ---------- */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pcard{background:var(--paper);border-radius:20px;padding:18px 19px 16px;box-shadow:var(--shadow-sm)}
+.pcard .pno{font:800 21px var(--num);color:var(--caramel)}
+.pcard h5{margin:5px 0 1px;font-size:14px;font-weight:900;letter-spacing:.03em}
+.pcard .pen{font:500 8.5px var(--mono);letter-spacing:.08em;color:var(--mut);text-transform:uppercase;display:block}
+.pcard p{margin:8px 0 0;font-size:11px;color:var(--soft);line-height:1.7}
+.srcline{margin-top:20px;font-size:11.5px;color:var(--mut);line-height:1.9}
+.srcline a{color:var(--caramel-d)}
+/* ---------- onboarding flow ---------- */
+.flowwrap{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
+.stepdots{display:flex;gap:6px;justify-content:center;margin-bottom:2px}
+.stepdots i{width:24px;height:5px;border-radius:3px;background:#DDD8D0}
+.stepdots i.on{background:var(--caramel)}
+.imgslot{border:2.5px dashed #CFC9C0;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--mut);background:rgba(251,249,246,.45);text-align:center;padding:12px}
+.imgslot b{font:700 11px var(--mono);letter-spacing:.06em;color:var(--caramel-d)}
+.imgslot span{font-size:10.5px;line-height:1.6}
+.hero-head{font-size:25px;font-weight:900;line-height:1.55;letter-spacing:.04em;margin-top:4px}
+.hero-sub{font-size:11.5px;color:var(--mut);margin-top:8px;line-height:1.8}
+.forminput{background:var(--paper);border-radius:18px;padding:15px 18px;box-shadow:var(--shadow-sm)}
+.forminput small{display:block;font:600 9.5px var(--mono);letter-spacing:.26em;color:var(--mut);margin-bottom:7px}
+.forminput .val{font-size:21px;font-weight:900;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dicechip{flex:0 0 auto;font-size:10.5px;font-weight:700;color:var(--caramel-d);background:var(--caramel-p);border-radius:999px;padding:5px 11px}
+.wheel{background:var(--paper);border-radius:20px;padding:12px 16px;box-shadow:var(--shadow-sm)}
+.wheel .row{text-align:center;font:700 21px var(--num);color:#C9C3BA;padding:8px 0;letter-spacing:.01em}
+.wheel .row.on{font:800 30px var(--num);color:var(--ink);background:#F4EEE3;border-radius:14px}
+.stepper{display:flex;align-items:center;justify-content:center;gap:30px;background:var(--paper);border-radius:20px;padding:24px;box-shadow:var(--shadow-sm)}
+.stepper .pm{width:52px;height:52px;border-radius:50%;background:var(--caramel-p);color:var(--caramel-d);font:800 25px var(--num);display:grid;place-items:center}
+.stepper .num{font:800 62px/1 var(--num)}
+.emojigrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.emojigrid i{aspect-ratio:1;display:grid;place-items:center;font-size:23px;font-style:normal;background:var(--paper);border-radius:14px;box-shadow:var(--shadow-sm)}
+.emojigrid i.on{outline:2.5px solid var(--caramel);outline-offset:-2.5px}
+.lanyard{display:flex;flex-direction:column;align-items:center;margin-top:-64px}
+.lanyard .strap{width:13px;height:132px;background:var(--caramel);border-radius:0 0 6px 6px}
+.bigbadge{width:225px;background:var(--paper);border-radius:22px;padding:18px 16px;text-align:center;box-shadow:var(--shadow-lg);transform:rotate(-2.5deg);position:relative;margin-top:-4px}
+.bigbadge .hole{width:44px;height:9px;border-radius:6px;background:#DDD8D0;margin:0 auto 13px}
+.bigbadge .bav{width:72px;height:72px;border-radius:20px;background:var(--caramel-p);display:grid;place-items:center;font-size:37px;margin:0 auto}
+.bigbadge .bnm{font-size:20px;font-weight:900;margin-top:10px}
+.bigbadge .brole{font:600 9.5px var(--mono);letter-spacing:.2em;color:var(--mut);margin-top:3px}
+.bigbadge .bcode{height:24px;margin:13px 8px 0;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 5px,var(--ink) 5px 6px,transparent 6px 11px);border-radius:2px;opacity:.72}
+.bigbadge .bseal{position:absolute;right:-14px;top:44px;width:56px;height:56px;border-radius:50%;border:2.5px solid var(--caramel-d);color:var(--caramel-d);display:grid;place-items:center;font-size:11px;font-weight:900;letter-spacing:.1em;transform:rotate(12deg);background:rgba(251,249,246,.8)}
+.bigbadge .bseal::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1px solid var(--caramel-d)}
+.invitecard{padding:18px;display:flex;flex-direction:column;gap:12px}
+.invitecard .ivhead{display:flex;align-items:center;gap:10px}
+.invitecard .ivhead b{font-size:14.5px;font-weight:900;letter-spacing:.08em}
+.invitecard .ivhead span{font:600 8.5px var(--mono);letter-spacing:.18em;color:var(--mut);display:block;margin-top:1px}
+.invitecard .ivbody{display:flex;gap:14px;align-items:center}
+.invitecard .ivinfo{flex:1}
+.invitecard .ivinfo .rt{font-size:22px;font-weight:900;letter-spacing:.02em}
+.invitecard .ivinfo .rd{font-size:10.5px;color:var(--mut);margin-top:5px;line-height:1.8}
+/* ---------- milestone & share card ---------- */
+.mileblock{text-align:center;position:relative;padding:8px 0 2px}
+.mileblock .mnum{font:800 116px/1 var(--num);letter-spacing:-.04em}
+.mileblock .msub{font-size:12px;font-weight:800;letter-spacing:.3em;color:var(--gold-d);margin-top:4px}
+.mileblock .spark{position:absolute;color:var(--gold);font-size:22px}
+.sharecard{width:470px;max-width:100%;padding:24px 28px;display:flex;gap:20px;align-items:stretch}
+.sharecard .shl{flex:1.5;display:flex;flex-direction:column}
+.sharecard .shl small{font:600 9px var(--mono);letter-spacing:.3em;color:var(--mut)}
+.sharecard .shl .sht{font-size:21px;font-weight:900;line-height:1.5;margin-top:8px}
+.sharecard .shl .shm{font-size:10.5px;color:var(--mut);margin-top:auto;line-height:1.8}
+.sharecard .shperf{width:2px;margin:0 4px;background-image:radial-gradient(circle,#CFC9C0 1.6px,transparent 1.9px);background-size:3px 13px;background-repeat:repeat-y}
+.sharecard .shr{flex:.8;position:relative;display:grid;place-items:center}
+.sharecard .shr .shn{font:800 84px/1 var(--num);color:var(--orange-d)}
+.sharecard .shr .shseal{position:absolute;right:-8px;top:-6px;width:52px;height:52px;border-radius:50%;border:2.5px solid var(--orange-d);color:var(--orange-d);display:grid;place-items:center;font-size:10px;font-weight:900;transform:rotate(-12deg)}
+.sharecard .shr .shseal::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1px solid var(--orange-d)}
+/* ---------- prompt pack ---------- */
+.plist{display:flex;flex-direction:column;gap:14px}
+.prow{background:var(--paper);border-radius:20px;padding:18px 22px;box-shadow:var(--shadow-sm);display:grid;grid-template-columns:215px 1fr;gap:6px 24px;align-items:start}
+.prow .pid{font:700 11px var(--mono);color:#fff;background:var(--caramel);border-radius:8px;padding:4px 9px;display:inline-block;justify-self:start}
+.prow .pname{font-size:13.5px;font-weight:900;margin:8px 0 3px}
+.prow .pmeta{font-size:10.5px;color:var(--mut);line-height:1.75}
+.prow pre{grid-column:2;grid-row:1 / span 4;margin:0;background:#F2EEE6;border-radius:12px;padding:13px 15px;font:11px/1.75 var(--mono);white-space:pre-wrap;word-break:break-word;color:#4A443B;user-select:all}
+.prow.note{grid-template-columns:1fr}
+.prow.note pre{grid-column:1;grid-row:auto}
+@media (max-width:1100px){.pgrid{grid-template-columns:repeat(2,1fr)}.prow{grid-template-columns:1fr}.prow pre{grid-column:1;grid-row:auto}}
+
+@media (max-width:980px){.langgrid{grid-template-columns:1fr}.hgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <!-- 三花 · 坐 -->
+  <g id="cat-calico">
+    <path d="M120 172 C148 164 156 134 142 112" fill="none" stroke="#C6884A" stroke-width="15" stroke-linecap="round"/>
+    <path d="M46 196 C38 138 46 100 62 82 L98 82 C114 100 122 138 114 196 Z" fill="#FBF9F6" stroke="#DCD5C9" stroke-width="2.5"/>
+    <path d="M46 32 L38 4 L68 18 Z" fill="#FBF9F6" stroke="#DCD5C9" stroke-width="2.5"/>
+    <path d="M114 32 L122 4 L92 18 Z" fill="#FBF9F6" stroke="#DCD5C9" stroke-width="2.5"/>
+    <rect x="33" y="19" width="94" height="66" rx="26" fill="#FBF9F6" stroke="#DCD5C9" stroke-width="2.5"/>
+    <path d="M93 17 L121 4 L126 33 C118 43 103 45 94 39 Z" fill="#C6884A"/>
+    <path d="M110 9 L121 4 L124 19 C119 25 112 23 108 17 Z" fill="#78441F"/>
+    <circle cx="59" cy="49" r="4.6" fill="#211E1A"/><circle cx="101" cy="49" r="4.6" fill="#211E1A"/>
+    <path d="M77 58 L83 58 L80 63 Z" fill="#D9856C"/>
+    <path d="M80 63 C78 68 74 69 72 66 M80 63 C82 68 86 69 88 66" fill="none" stroke="#211E1A" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M50 52 L20 46 M50 57 L17 58 M50 62 L21 70 M110 52 L140 46 M110 57 L143 58 M110 62 L139 70" fill="none" stroke="#211E1A" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M80 134 L80 190" stroke="#EAE6DF" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <!-- 玳瑁 · 趴 · 机警 -->
+  <g id="cat-tortie">
+    <path d="M216 106 C244 98 252 74 238 58" fill="none" stroke="#78441F" stroke-width="14" stroke-linecap="round"/>
+    <rect x="26" y="66" width="198" height="66" rx="33" fill="#78441F"/>
+    <ellipse cx="112" cy="88" rx="44" ry="25" fill="#C6884A"/>
+    <ellipse cx="188" cy="112" rx="34" ry="19" fill="#C6884A"/>
+    <path d="M42 28 L34 2 L62 15 Z" fill="#78441F"/>
+    <path d="M102 28 L112 2 L84 15 Z" fill="#C6884A"/>
+    <rect x="28" y="16" width="88" height="62" rx="23" fill="#78441F"/>
+    <path d="M76 16 L116 16 L116 50 C104 60 88 58 80 48 Z" fill="#C6884A"/>
+    <circle cx="54" cy="44" r="6" fill="#E2A33C"/><circle cx="54" cy="44" r="2.8" fill="#211E1A"/>
+    <circle cx="92" cy="44" r="6" fill="#E2A33C"/><circle cx="92" cy="44" r="2.8" fill="#211E1A"/>
+    <path d="M69 55 L77 55 L73 61 Z" fill="#E4A08C"/>
+    <path d="M73 61 C71 65 67 66 65 63 M73 61 C75 65 79 66 81 63" fill="none" stroke="#F3EEE6" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M46 48 L16 42 M46 53 L13 54 M46 58 L17 66 M100 48 L130 42 M100 53 L133 54 M100 58 L129 66" fill="none" stroke="#F3EEE6" stroke-width="1.4" stroke-linecap="round"/>
+    <rect x="36" y="120" width="46" height="14" rx="7" fill="#C6884A"/>
+  </g>
+  <!-- 黑猫 · 坐 · 金瞳 -->
+  <g id="cat-black">
+    <path d="M44 184 C14 178 6 148 24 130" fill="none" stroke="#221F1C" stroke-width="16" stroke-linecap="round"/>
+    <path d="M48 196 C40 138 48 100 64 82 L100 82 C116 100 124 138 116 196 Z" fill="#221F1C"/>
+    <path d="M48 32 L40 4 L70 18 Z" fill="#221F1C"/>
+    <path d="M116 32 L124 4 L94 18 Z" fill="#221F1C"/>
+    <rect x="35" y="19" width="94" height="66" rx="26" fill="#221F1C"/>
+    <circle cx="61" cy="49" r="5.4" fill="#E2A33C"/><circle cx="61" cy="49" r="2.4" fill="#0D0C0B"/>
+    <circle cx="103" cy="49" r="5.4" fill="#E2A33C"/><circle cx="103" cy="49" r="2.4" fill="#0D0C0B"/>
+    <path d="M79 59 L85 59 L82 64 Z" fill="#8C8680"/>
+    <path d="M82 64 C80 69 76 70 74 67 M82 64 C84 69 88 70 90 67" fill="none" stroke="#8C8680" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M52 52 L22 46 M52 57 L19 58 M52 62 L23 70 M112 52 L142 46 M112 57 L145 58 M112 62 L141 70" fill="none" stroke="#EDE8E0" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+  <!-- 蓝猫 · 坐 -->
+  <g id="cat-blue">
+    <path d="M126 178 C152 170 160 142 148 122" fill="none" stroke="#3A62A6" stroke-width="15" stroke-linecap="round"/>
+    <path d="M42 192 C34 134 44 98 62 80 L108 80 C126 98 136 134 128 192 Z" fill="#4E7ECF"/>
+    <path d="M44 32 L36 2 L68 17 Z" fill="#4E7ECF"/>
+    <path d="M122 32 L130 2 L98 17 Z" fill="#4E7ECF"/>
+    <path d="M49 26 L45 12 L61 19 Z" fill="#3A62A6"/>
+    <path d="M117 26 L121 12 L105 19 Z" fill="#3A62A6"/>
+    <rect x="31" y="18" width="104" height="68" rx="27" fill="#4E7ECF"/>
+    <circle cx="61" cy="50" r="4.8" fill="#211E1A"/><circle cx="105" cy="50" r="4.8" fill="#211E1A"/>
+    <path d="M80 59 L86 59 L83 64 Z" fill="#E88AA0"/>
+    <path d="M83 64 C81 69 77 70 75 67 M83 64 C85 69 89 70 91 67" fill="none" stroke="#2C4A7E" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M52 53 L22 47 M52 58 L19 59 M52 63 L23 71 M114 53 L144 47 M114 58 L147 59 M114 63 L143 71" fill="none" stroke="#2C4A7E" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="52" y="178" width="30" height="14" rx="7" fill="#6E97DC"/>
+    <rect x="88" y="178" width="30" height="14" rx="7" fill="#6E97DC"/>
+  </g>
+  <!-- 橘猫 · 趴挂沿 -->
+  <g id="cat-orange">
+    <path d="M212 96 C228 122 224 152 204 166" fill="none" stroke="#EF8A1E" stroke-width="15" stroke-linecap="round"/>
+    <rect x="207" y="112" width="26" height="9" rx="4.5" fill="#C96E12" transform="rotate(14 220 116)"/>
+    <rect x="204" y="138" width="26" height="9" rx="4.5" fill="#C96E12" transform="rotate(24 217 142)"/>
+    <rect x="34" y="42" width="198" height="66" rx="33" fill="#EF8A1E"/>
+    <path d="M150 46 L150 84" stroke="#C96E12" stroke-width="13" stroke-linecap="round"/>
+    <path d="M178 46 L178 86" stroke="#C96E12" stroke-width="13" stroke-linecap="round"/>
+    <path d="M205 50 L205 88" stroke="#C96E12" stroke-width="13" stroke-linecap="round"/>
+    <path d="M46 28 L38 2 L66 15 Z" fill="#EF8A1E"/>
+    <path d="M108 28 L118 2 L88 15 Z" fill="#EF8A1E"/>
+    <rect x="32" y="16" width="90" height="62" rx="22" fill="#EF8A1E"/>
+    <path d="M64 20 L64 32 M80 18 L80 32" stroke="#C96E12" stroke-width="7" stroke-linecap="round"/>
+    <rect x="58" y="100" width="26" height="60" rx="13" fill="#EF8A1E"/>
+    <path d="M62 128 L80 124" stroke="#C96E12" stroke-width="6" stroke-linecap="round"/>
+    <rect x="96" y="94" width="42" height="16" rx="8" fill="#F09A40"/>
+    <circle cx="58" cy="46" r="4.6" fill="#211E1A"/><circle cx="96" cy="46" r="4.6" fill="#211E1A"/>
+    <path d="M74 55 L80 55 L77 60 Z" fill="#D9856C"/>
+    <path d="M77 60 C75 64 71 65 69 62 M77 60 C79 64 83 65 85 62" fill="none" stroke="#211E1A" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M50 49 L20 43 M50 54 L17 55 M50 59 L21 67 M104 49 L134 43 M104 54 L137 55 M104 59 L133 67" fill="none" stroke="#211E1A" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+  <!-- 灰白猫 · 趴 · 闭眼 -->
+  <g id="cat-whitegray">
+    <path d="M222 100 C244 116 240 140 220 146" fill="none" stroke="#9C978F" stroke-width="14" stroke-linecap="round"/>
+    <rect x="30" y="64" width="200" height="64" rx="32" fill="#FBF9F6" stroke="#DCD5C9" stroke-width="2.5"/>
+    <path d="M172 68 L172 122 M194 70 L194 120" stroke="#B9B4AC" stroke-width="10" stroke-linecap="round"/>
+    <path d="M44 26 L36 0 L64 13 Z" fill="#9C978F"/>
+    <path d="M104 26 L114 0 L86 13 Z" fill="#FBF9F6" stroke="#DCD5C9" stroke-width="2.5"/>
+    <rect x="30" y="14" width="88" height="62" rx="22" fill="#FBF9F6" stroke="#DCD5C9" stroke-width="2.5"/>
+    <path d="M30 40 C30 24 38 14 52 14 C64 14 70 24 68 36 C62 48 44 50 30 40 Z" fill="#9C978F"/>
+    <path d="M52 46 Q58 51 64 46 M92 46 Q98 51 104 46" fill="none" stroke="#211E1A" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M74 54 L82 54 L78 60 Z" fill="#8D867C"/>
+    <path d="M78 60 C76 64 72 65 70 62 M78 60 C80 64 84 65 86 62" fill="none" stroke="#211E1A" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M48 50 L18 44 M48 55 L15 56 M48 60 L19 68 M108 50 L138 44 M108 55 L141 56 M108 60 L137 68" fill="none" stroke="#211E1A" stroke-width="1.3" stroke-linecap="round"/>
+    <rect x="40" y="116" width="44" height="14" rx="7" fill="#FBF9F6" stroke="#DCD5C9" stroke-width="2.5"/>
+    <path d="M62 118 L62 128" stroke="#E4E0D9" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <!-- 粉猫 · 坐 · 蔫 -->
+  <g id="cat-pink">
+    <path d="M122 176 C150 168 158 138 144 116" fill="none" stroke="#D77E9C" stroke-width="15" stroke-linecap="round"/>
+    <path d="M46 196 C38 138 46 100 62 82 L98 82 C114 100 122 138 114 196 Z" fill="#EFA6BE"/>
+    <path d="M46 32 L38 4 L68 18 Z" fill="#EFA6BE"/>
+    <path d="M114 32 L122 4 L92 18 Z" fill="#EFA6BE"/>
+    <path d="M51 26 L47 12 L63 19 Z" fill="#D77E9C"/>
+    <path d="M109 26 L113 12 L97 19 Z" fill="#D77E9C"/>
+    <rect x="33" y="19" width="94" height="66" rx="26" fill="#EFA6BE"/>
+    <circle cx="59" cy="50" r="4.4" fill="#211E1A"/><circle cx="101" cy="50" r="4.4" fill="#211E1A"/>
+    <path d="M77 59 L83 59 L80 64 Z" fill="#C96A8C"/>
+    <path d="M74 68 Q80 63 86 68" fill="none" stroke="#9E5674" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M50 54 L21 52 M50 59 L18 62 M50 64 L23 74 M110 54 L139 52 M110 59 L142 62 M110 64 L137 74" fill="none" stroke="#9E5674" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M80 134 L80 190" stroke="#E693B0" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <!-- 小巴士 -->
+  <g id="bus-n">
+    <rect x="2" y="6" width="58" height="36" rx="11" fill="#C6884A"/>
+    <rect x="9" y="13" width="20" height="13" rx="4" fill="#FBF9F6"/>
+    <rect x="34" y="13" width="15" height="13" rx="4" fill="#FBF9F6"/>
+    <rect x="9" y="31" width="40" height="4" rx="2" fill="#A96C33"/>
+    <circle cx="17" cy="45" r="6.5" fill="#211E1A"/><circle cx="17" cy="45" r="2.5" fill="#8D867C"/>
+    <circle cx="45" cy="45" r="6.5" fill="#211E1A"/><circle cx="45" cy="45" r="2.5" fill="#8D867C"/>
+  </g>
+  <!-- 闸机 -->
+  <g id="gate-n">
+    <rect x="12" y="16" width="26" height="112" rx="13" fill="#3A3631"/>
+    <rect x="150" y="16" width="26" height="112" rx="13" fill="#3A3631"/>
+    <circle cx="163" cy="52" r="9" fill="#E2A64F"/>
+    <path d="M144 42 A15 15 0 0 0 144 62 M135 35 A24 24 0 0 0 135 69" fill="none" stroke="#E2A64F" stroke-width="3" stroke-linecap="round"/>
+    <path d="M62 36 L62 118" stroke="#CFC9C0" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 10"/>
+    <rect x="2" y="128" width="184" height="8" rx="4" fill="#D8D3CA"/>
+  </g>
+  <!-- 摇号鼓 -->
+  <g id="drum-n">
+    <path d="M74 148 L52 180 M146 148 L168 180" stroke="#3A3631" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="110" cy="90" r="62" fill="#D9A13B"/>
+    <path d="M50 90 H170" stroke="#B9822A" stroke-width="10"/>
+    <rect x="86" y="58" width="48" height="10" rx="5" fill="#8F6410"/>
+    <circle cx="60" cy="90" r="4" fill="#8F6410"/><circle cx="160" cy="90" r="4" fill="#8F6410"/>
+    <path d="M172 90 L194 90 L194 70" stroke="#3A3631" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <circle cx="194" cy="64" r="7" fill="#3A3631"/>
+    <path d="M30 46 A88 88 0 0 1 44 28 M18 70 A96 96 0 0 1 26 52" fill="none" stroke="#B4ADA1" stroke-width="4" stroke-linecap="round"/>
+    <path d="M190 34 L196 24 M200 44 L210 38" stroke="#D9A13B" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</defs>
+</svg>
+
+<div class="board">
+
+<header class="bhead">
+  <div class="kick">OFF WORK EXPRESS · G604 · DESIGN BOARD v2</div>
+  <h1>下班发车 · 分层页面<span> · 北欧风</span></h1>
+  <p class="lede">以三张 2:1 车票为版式基因（切口 · 撕票线 · 大号时刻 · 状态区），皮肤按北欧猫咪插画重定：暖灰纸面、无描边剪影、低饱和底色 + 每相位一个点缀色。吉祥物是可插拔皮肤（北欧猫阵容 / 班班小巴 / 直接留白）——情绪页开、操作页关，去掉也成立。每页按 L0–L5 六层拆解，直接对应 Framer Motion 的动效编排单元。</p>
+  <div class="bmeta"><i>设计基准 390 × 844</i><i>16 屏全流程</i><i>Onboarding + 7 相位</i><i>六层动效栈</i><i>字体 Noto Sans SC / Helvetica 数字</i><i>2026-08-29</i></div>
+</header>
+
+<!-- ============ S0 角色阵容 ============ -->
+<section class="sec" data-screen-label="S0 角色阵容">
+  <div class="shead"><span class="no">S0</span><h2>状态色谱 · 情绪皮肤（可选）</h2><span class="en">The Cast</span></div>
+  <p class="slede">每个相位一个点缀色，情绪皮肤按参考图的「层板」构图给了一套北欧猫阵容——但吉祥物不是必需品：整层可关、可换成班班小巴，去掉后页面信息依旧完整。下方相位页里演示了两种形态：情绪页带皮肤，操作页整层关闭。</p>
+  <div class="scene">
+    <span class="scaption">Shelf Scene · 状态即角色</span>
+    <div class="ledge l1"></div>
+    <div class="ledge l2"></div>
+    <svg class="scat" style="left:70px;bottom:390px;width:126px" viewBox="0 0 160 200"><use href="#cat-calico"/></svg>
+    <div class="plab" style="left:133px;top:248px;--pc:var(--caramel)"><i>00 IDLE</i><b>平峰 · 三花</b></div>
+    <svg class="scat" style="left:270px;bottom:390px;width:186px" viewBox="0 0 250 150"><use href="#cat-tortie"/></svg>
+    <div class="plab" style="left:363px;top:248px;--pc:var(--amber)"><i>01 BOARDING</i><b>检票 · 玳瑁</b></div>
+    <svg class="scat" style="left:540px;bottom:390px;width:130px" viewBox="0 0 165 200"><use href="#cat-black"/></svg>
+    <div class="plab" style="left:605px;top:248px;--pc:var(--gold)"><i>02 DRAWING</i><b>开奖 · 黑猫</b></div>
+    <svg class="scat" style="left:760px;bottom:390px;width:134px" viewBox="0 0 170 195"><use href="#cat-blue"/></svg>
+    <div class="plab" style="left:827px;top:248px;--pc:var(--blue)"><i>03 DEPARTING</i><b>发车 · 蓝猫</b></div>
+    <svg class="scat" style="left:1010px;bottom:344px;width:196px" viewBox="0 0 265 185"><use href="#cat-orange"/></svg>
+    <div class="plab" style="left:1108px;top:248px;--pc:var(--orange)"><i>04 DEPARTED</i><b>已发车 · 橘猫</b></div>
+    <svg class="scat" style="left:430px;bottom:112px;width:190px" viewBox="0 0 255 150"><use href="#cat-whitegray"/></svg>
+    <div class="plab" style="left:525px;top:508px;--pc:var(--gray)"><i>05 SETTLED</i><b>收班 · 灰白</b></div>
+    <svg class="scat" style="left:800px;bottom:130px;width:124px" viewBox="0 0 160 200"><use href="#cat-pink"/></svg>
+    <div class="plab" style="left:862px;top:508px;--pc:var(--pink-d)"><i>06 SUSPENDED</i><b>停运 · 粉猫</b></div>
+  </div>
+</section>
+<!-- ============ S1 设计语言 ============ -->
+<section class="sec" data-screen-label="S1 设计语言">
+  <div class="shead"><span class="no">S1</span><h2>设计语言 · 车票基因 × 北欧皮肤</h2><span class="en">Design Language</span></div>
+  <p class="slede">保留车票参考的版式骨架（左信息 / 右状态、切口、撕票线、超大等宽时刻），去掉粗黑描边与满屏高饱和底——改为暖灰纸面上的白纸卡片、柔投影、细须线。下图是北欧化之后的「下班发车票」。</p>
+  <div class="langgrid">
+    <div>
+      <div class="hticket">
+        <div class="ht-left">
+          <div class="ht-brand">
+            <svg width="46" height="38" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+            <div><span class="bt">下班发车票</span><span class="be">OFF WORK EXPRESS</span></div>
+          </div>
+          <div class="ht-time"><small>发车时间</small><b>18:00</b></div>
+          <div class="ht-date"><span>发车日期&nbsp;&nbsp;2026.08.29</span><span>星期五</span><span>车次&nbsp;&nbsp;G604</span></div>
+        </div>
+        <div class="ht-perf"></div>
+        <div class="ht-right">
+          <small>状态</small>
+          <span class="st">待发车</span>
+          <span class="bar"></span>
+          <svg class="ht-cat" viewBox="0 0 160 200"><use href="#cat-calico"/></svg>
+        </div>
+      </div>
+      <div class="refrow">
+        <figure><img src="assets/下班发车票_待发车_2比1.svg" alt="原参考 · 待发车"><figcaption>原参考 · 待发车 #F7EAD7</figcaption></figure>
+        <figure><img src="assets/下班发车票_已发车_2比1.svg" alt="原参考 · 已发车"><figcaption>原参考 · 已发车 #FF8B18</figcaption></figure>
+        <figure><img src="assets/下班发车票_发车失败_2比1.svg" alt="原参考 · 发车失败"><figcaption>原参考 · 发车失败 #F49AB4</figcaption></figure>
+        <figure class="tall"><img src="assets/北欧猫咪参考.png" alt="北欧猫咪参考"><figcaption>北欧风参考 · 皮肤与角色来源</figcaption></figure>
+      </div>
+    </div>
+    <div class="tokencol">
+      <div class="tcard">
+        <h4>相位点缀色</h4><span class="ten">One accent per phase · 底永远是暖灰纸</span>
+        <div class="swrow">
+          <div class="sw"><i style="--c:#C6884A"></i><b>焦糖</b><em>平峰</em></div>
+          <div class="sw"><i style="--c:#E2A64F"></i><b>琥珀</b><em>检票</em></div>
+          <div class="sw"><i style="--c:#D9A13B"></i><b>金</b><em>开奖</em></div>
+          <div class="sw"><i style="--c:#4E7ECF"></i><b>蓝</b><em>发车</em></div>
+          <div class="sw"><i style="--c:#EF8A1E"></i><b>橘</b><em>已发车</em></div>
+          <div class="sw"><i style="--c:#9C978F"></i><b>暖灰</b><em>收班</em></div>
+          <div class="sw"><i style="--c:#EFA6BE"></i><b>粉</b><em>停运</em></div>
+        </div>
+      </div>
+      <div class="tcard">
+        <h4>纸面规则</h4><span class="ten">Nordic paper rules</span>
+        <ul class="rulelist">
+          <li>画布恒定暖灰 #E8E5E0；相位只给屏底 8–12% 的点缀色淡染，情绪靠猫和组件</li>
+          <li>形状零描边：白纸卡 #FBF9F6 + 柔投影（剪纸感），细节用 1.5px 细须线</li>
+          <li>金色是列车长专属，开奖揭晓前全产品不得出现</li>
+          <li>数字一律 Helvetica/Arial 800 tabular；中文标签 700–900 + 宽字距</li>
+          <li>圆角家族：屏 46 / 卡 20–26 / 药丸 999，投影只有三档</li>
+        </ul>
+      </div>
+      <div class="tcard">
+        <h4>组件 DNA</h4><span class="ten">Ticket DNA kept</span>
+        <div class="dnarow">
+          <div class="dna"><div class="demo"><div class="punch" style="width:86px;height:44px"></div></div><b>切口</b><em>punch</em></div>
+          <div class="dna"><div class="demo" style="align-items:center"><div class="perf" style="width:80%"></div></div><b>撕票线</b><em>perforation</em></div>
+          <div class="dna"><div class="demo"><span style="width:50px;height:50px;border-radius:50%;border:2.5px solid var(--gold-d);color:var(--gold-d);display:grid;place-items:center;font-size:9.5px;font-weight:900;transform:rotate(-12deg);position:relative">列车长<i style="position:absolute;inset:3.5px;border-radius:50%;border:1px solid var(--gold-d)"></i></span></div><b>印章</b><em>seal</em></div>
+          <div class="dna"><div class="demo"><div style="background:var(--paper);border-radius:12px;padding:8px 10px;box-shadow:var(--shadow-sm);text-align:center"><i style="display:block;width:18px;height:4px;border-radius:3px;background:#DDD8D0;margin:0 auto 5px"></i><span style="font-size:16px">⚡</span></div></div><b>工牌</b><em>badge</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S2 分层模型 ============ -->
+<section class="sec" data-screen-label="S2 分层模型">
+  <div class="shead"><span class="no">S2</span><h2>六层动效栈 · 每页同构</h2><span class="en">Layer Model</span></div>
+  <p class="slede">所有相位页面共用同一套六层结构——切相位时各层独立进出场（L0 底色淡染渐变、L2 舞台弹簧换件、L3 换猫），互不阻塞。层号越大 z-index 越高。</p>
+  <div class="stackwrap">
+    <div class="stack">
+      <div class="sheet solid" style="--i:0"><span class="lt" style="--lc:#A79F92">L0</span></div>
+      <div class="sheet" style="--i:1"><span class="lt" style="--lc:#6E675C">L1</span><div class="mini-top"></div></div>
+      <div class="sheet" style="--i:2"><span class="lt" style="--lc:var(--caramel)">L2</span><div class="mini-num"><small>DEPART</small>18:00</div></div>
+      <div class="sheet" style="--i:3"><span class="lt" style="--lc:var(--orange)">L3</span><svg class="mini-cat" viewBox="0 0 160 200"><use href="#cat-calico"/></svg></div>
+      <div class="sheet" style="--i:4"><span class="lt" style="--lc:var(--blue)">L4</span><div class="mini-dock"></div></div>
+      <div class="sheet" style="--i:5"><span class="lt" style="--lc:var(--gold)">L5</span><span class="spark" style="left:36px;top:96px">✦</span><span class="spark" style="right:44px;top:150px;font-size:14px">✦</span><span class="spark" style="left:90px;bottom:120px;font-size:11px">✦</span></div>
+    </div>
+    <div class="stacklegend">
+      <div class="lrow"><span class="ltag lt0">L0</span><div class="lbody"><b>底色纸</b><p>暖灰纸面 + 相位点缀色 8–12% 淡染，整屏底。</p><em>相位切换：opacity 交叉淡入 360ms · 不参与弹簧</em></div></div>
+      <div class="lrow"><span class="ltag lt1">L1</span><div class="lbody"><b>站牌层</b><p>发车牌（车次 / 开往 / 时刻）+ 状态药丸，全相位常驻。</p><em>layout 动画：内容变化时数字翻牌，位置不动</em></div></div>
+      <div class="lrow"><span class="ltag lt2">L2</span><div class="lbody"><b>舞台层</b><p>每相位的主角组件：倒计时票卡 → 闸机票箱 → 摇号鼓 → 滑轨 → 车厢 → 结算票。</p><em>spring(300, 20) · 入场 overshoot 5–10% · 禁直线 ease</em></div></div>
+      <div class="lrow"><span class="ltag lt3">L3</span><div class="lbody"><b>吉祥物层（可选）</b><p>可插拔情绪皮肤：情绪页开（平峰 / 已发车 / 收班 / 停运），操作与观演页关（检票 / 开奖 / 发车中）——注意力留给主舞台。皮肤可换：猫阵容 / 班班小巴 / none。</p><em>~2s 无缝 loop · 换角 = 旧退场新弹入 · 可点击彩蛋</em></div></div>
+      <div class="lrow"><span class="ltag lt4">L4</span><div class="lbody"><b>操作层</b><p>本相位唯一主操作：刷工牌 / 接令 / 滑动发车 / 已上车，一屏只干一件事。</p><em>拖拽跟手 + 磁吸 · touch-action:none</em></div></div>
+      <div class="lrow"><span class="ltag lt5">L5</span><div class="lbody"><b>特效层</b><p>toast 通知横幅、金色彩带、震动与音效触发点，永远最顶。</p><em>全屏庆祝仅两处：第三位列车长揭晓 / streak 里程碑</em></div></div>
+    </div>
+  </div>
+</section>
+<!-- ============ S3 动效十二原则 ============ -->
+<section class="sec" data-screen-label="S3 动效十二原则">
+  <div class="shead"><span class="no">S3</span><h2>动效十二原则 · 产品对照</h2><span class="en">12 Principles of Animation</span></div>
+  <p class="slede">所有动效实现前对照此表——原则是菜单不是清单：每个镜头只挑修复感知问题的最小集合。交互反馈控制在 300ms 内，观演动画（开奖 20 秒）例外。</p>
+  <div class="pgrid">
+    <div class="pcard"><span class="pno">01</span><h5>挤压与拉伸</h5><span class="pen">Squash &amp; Stretch</span><p>票箱被票击中：垂直压 8%、水平变宽（<b>面积守恒</b>）再回弹；头像入座同款。只在受力与触地一瞬用，禁全程果冻。</p></div>
+    <div class="pcard"><span class="pno">02</span><h5>预备动作</h5><span class="pen">Anticipation</span><p>摇号鼓吐票前先<b>反向后摆蓄力</b>；闸机升起前下蹲 4px；滑块被按住先缩到 0.96——先给暗示，再给动作。</p></div>
+    <div class="pcard"><span class="pno">03</span><h5>演出布局</h5><span class="pen">Staging</span><p><b>一屏一主角</b>：开奖 20 秒站牌降灰、操作层清空，亮度全让给鼓；发车令弹出时背景加暗罩。</p></div>
+    <div class="pcard"><span class="pno">04</span><h5>关键姿态</h5><span class="pen">Pose-to-Pose</span><p>开奖是<b>姿态表驱动</b>：收票→变鼓→摇→吐→翻→盖章逐相编排（先定姿态再选缓动）；工牌拖拽是 straight-ahead 跟手实时。</p></div>
+    <div class="pcard"><span class="pno">05</span><h5>跟随与重叠</h5><span class="pen">Follow Through</span><p>工牌吸附到位后<b>挂绳再摆两下</b>才停；车票落定时票角回甩；吉祥物尾巴比身体晚 ~100ms。</p></div>
+    <div class="pcard"><span class="pno">06</span><h5>缓入缓出</h5><span class="pen">Slow In &amp; Out</span><p>全局 spring(300, 20)、<b>禁 linear</b>；重物更钝——闸机 damping 高起步慢，车票轻快利落。</p></div>
+    <div class="pcard"><span class="pno">07</span><h5>弧线运动</h5><span class="pen">Arc</span><p>车票飞入票箱走<b>抛物线</b>不走直线；头像跳进车窗弧线入座；彩带按自由落体下坠。</p></div>
+    <div class="pcard"><span class="pno">08</span><h5>次要动作</h5><span class="pen">Secondary Action</span><p>刷卡「嘀」配感应<b>波纹 + 计数翻牌</b>；盖章溅两粒纸屑。次要动作永远晚于且弱于主动作。</p></div>
+    <div class="pcard"><span class="pno">09</span><h5>时间节奏</h5><span class="pen">Timing</span><p>翻面前<b>停 0.8s</b> 是悬念呼吸位；每张票 ~4s ×3 悬念三倍化；轻元素 ~300ms、重元素 ~600ms。</p></div>
+    <div class="pcard"><span class="pno">10</span><h5>夸张</h5><span class="pen">Exaggeration</span><p>金章 <b>scale 2.2→1 砸下</b> + 震屏；入场 overshoot 5–10%。一次只夸张一个通道，全上就乱。</p></div>
+    <div class="pcard"><span class="pno">11</span><h5>扎实描绘</h5><span class="pen">Solid Drawing</span><p>剪纸层级靠<b>三档投影</b>分深度；压扁时保面积不丢体积；纸片飞行带 1–2° 旋转防呆板。</p></div>
+    <div class="pcard"><span class="pno">12</span><h5>吸引力</h5><span class="pen">Appeal</span><p>爽点手感 <b>timebox 打磨</b>（M1 拖拽上限 45 分钟）；不好玩就重做——评委的表情是验收标准。</p></div>
+  </div>
+  <p class="srcline">参考：<a href="https://juejin.cn/post/6976792239393472520">动画十二原则在 Web 动效中的应用（掘金）</a> · <a href="https://cloud.tencent.com/developer/article/1874984">网页动画的十二原则（腾讯云）</a>。各相位图层拆解下方的「原则 #n」标签即指向本表。</p>
+</section>
+
+<!-- ============ F 首航 · 建队与入队 ============ -->
+<section class="sec" data-screen-label="F 首航 Onboarding">
+  <div class="shead"><span class="no">F</span><h2>首航 · 建队与入队</h2><span class="en">Onboarding Flow</span></div>
+  <p class="slede">像建群一样轻，每屏只干一件事（#3 演出布局）。两条支线：车队长 F1–F5（建队 → 邀请卡），受邀人 F6–F7（报到 → 领工牌）。物件链从这里开始：工牌 → 车票 → 列车长证。全程无相位色——车队还没发过车，纸面保持素灰。</p>
+  <div class="flowwrap">
+
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#EFEDE9">
+        <div class="notch"></div>
+        <div class="sbar"><b>21:12</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="imgslot" style="height:216px;margin-top:26px"><b>🎨 P-11</b><span>班班小巴在站牌下打盹<br>落地页主视觉 · 生图占位</span></div>
+        <div class="hero-head">大家都做完了，<br>都在等第一个<br>站起来的人。</div>
+        <div class="hero-sub">建一支车队，把「谁先走」变成「几点发车」。</div>
+        <div class="bigbtn" style="--ac:var(--caramel);--acs:rgba(138,90,38,.28);margin-top:auto">建 一 支 车 队</div>
+        <div class="ghostbtn" style="margin-top:10px">我有邀请链接</div>
+      </div></div>
+      <div class="phonecap">F1 · 落地页 · 一句话 + 一个动作</div>
+    </div>
+
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#EFEDE9">
+        <div class="notch"></div>
+        <div class="sbar"><b>21:13</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="stepdots" style="margin-top:10px"><i class="on"></i><i></i><i></i></div>
+        <div class="statusword"><small>STEP 1 / 3</small><b>给车队起个名</b><span class="bar" style="--ac:var(--caramel)"></span></div>
+        <div class="forminput">
+          <small>车队名 · 已给你一个梗</small>
+          <div class="val">604 次晚高峰<span class="dicechip">🎲 换一个</span></div>
+        </div>
+        <div class="notecard">备选梗名：「准点复仇者」「到点就崩」「G 老板快跑」——可改可保留，反正打卡机不看名字</div>
+        <div class="bigbtn" style="--ac:var(--caramel);--acs:rgba(138,90,38,.28);margin-top:auto">下 一 步</div>
+      </div></div>
+      <div class="phonecap">F2 · 建队 · 起名（默认给梗，零思考成本）</div>
+    </div>
+
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#EFEDE9">
+        <div class="notch"></div>
+        <div class="sbar"><b>21:13</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="stepdots" style="margin-top:10px"><i class="on"></i><i class="on"></i><i></i></div>
+        <div class="statusword"><small>STEP 2 / 3</small><b>几点发车？</b><span class="bar" style="--ac:var(--caramel)"></span></div>
+        <div class="wheel">
+          <div class="row">17:00</div>
+          <div class="row">17:30</div>
+          <div class="row on">18:00</div>
+          <div class="row">18:30</div>
+          <div class="row">19:00</div>
+        </div>
+        <div class="notecard"><b>车次号已生成：G604</b> · 检票固定 = 发车前 30 分钟（17:30 开检）</div>
+        <div class="bigbtn" style="--ac:var(--caramel);--acs:rgba(138,90,38,.28);margin-top:auto">下 一 步</div>
+      </div></div>
+      <div class="phonecap">F3 · 建队 · 大转轮定时刻（拨到位班班探头看表）</div>
+    </div>
+
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#EFEDE9">
+        <div class="notch"></div>
+        <div class="sbar"><b>21:14</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="stepdots" style="margin-top:10px"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+        <div class="statusword"><small>STEP 3 / 3</small><b>几个人才发车？</b><span class="bar" style="--ac:var(--caramel)"></span></div>
+        <div class="stepper"><span class="pm">−</span><span class="num">3</span><span class="pm">＋</span></div>
+        <div class="notecard">到点不足 3 人 → 今日停运，streak <b>冻结不清零</b>。人少建议 3，大队伍可拉高门槛</div>
+        <div class="bigbtn" style="--ac:var(--caramel);--acs:rgba(138,90,38,.28);margin-top:auto">生 成 邀 请 卡</div>
+      </div></div>
+      <div class="phonecap">F4 · 建队 · 最少发车人数（步进器）</div>
+    </div>
+
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#EFEDE9">
+        <div class="notch"></div>
+        <div class="sbar"><b>21:14</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="statusword" style="margin-top:8px"><small>INVITE</small><b>车队成立</b><span class="bar" style="--ac:var(--caramel)"></span></div>
+        <div class="punch invitecard">
+          <div class="ivhead">
+            <svg width="34" height="28" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+            <div><b>下班发车票 · 邀请函</b><span>OFF WORK EXPRESS · INVITE</span></div>
+          </div>
+          <div class="perf"></div>
+          <div class="ivbody">
+            <div class="ivinfo">
+              <div class="rt">G604 · 开往 家</div>
+              <div class="rd">每个工作日 18:00 发车<br>检票 17:30 · 最少 3 人成班<br>明天 17:30 · 到时见</div>
+            </div>
+            <div class="imgslot" style="width:104px;height:104px;flex:0 0 auto"><b>QR</b><span>真二维码<br>qrcode 库生成</span></div>
+          </div>
+        </div>
+        <div class="notecard" style="text-align:center">这张卡要好看到<b>想转发</b>——它就是获客物料 1 号</div>
+        <div class="bigbtn" style="--ac:var(--caramel);--acs:rgba(138,90,38,.28);margin-top:auto">发 给 同 事</div>
+        <div class="ghostbtn" style="margin-top:10px">存 图</div>
+      </div></div>
+      <div class="phonecap">F5 · 邀请卡 · 弹簧入场（#10 overshoot）</div>
+    </div>
+
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#EFEDE9">
+        <div class="notch"></div>
+        <div class="sbar"><b>09:02</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="statusword" style="margin-top:8px"><small>JOIN</small><b>G604 邀请你上车</b><span class="bar" style="--ac:var(--caramel)"></span></div>
+        <div class="forminput">
+          <small>你的花名</small>
+          <div class="val">阿轩</div>
+        </div>
+        <div class="wcard" style="padding-bottom:12px">
+          <h5>挑个头像 <em>EMOJI</em></h5>
+          <div class="emojigrid">
+            <i class="on">⚡</i><i>🦖</i><i>🍑</i><i>🛠️</i>
+            <i>🌙</i><i>🔥</i><i>🎧</i><i>🧊</i>
+          </div>
+        </div>
+        <div class="notecard">无账号体系：memberId 随机生成存本机 · 换手机扫码重进即可</div>
+        <div class="bigbtn" style="--ac:var(--caramel);--acs:rgba(138,90,38,.28);margin-top:auto">领 工 牌</div>
+      </div></div>
+      <div class="phonecap">F6 · 受邀报到 · 花名 + emoji，10 秒完事</div>
+    </div>
+
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#EFEDE9">
+        <div class="notch"></div>
+        <div class="sbar"><b>09:03</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="lanyard">
+          <div class="strap"></div>
+          <div class="bigbadge">
+            <span class="bseal">已入队</span>
+            <div class="hole"></div>
+            <div class="bav">⚡</div>
+            <div class="bnm">阿轩</div>
+            <div class="brole">G604 · 乘务工牌 · NO.008</div>
+            <div class="bcode"></div>
+          </div>
+        </div>
+        <div class="statusword" style="text-align:center;margin-top:26px"><small style="letter-spacing:.3em">WELCOME ABOARD</small><b style="font-size:22px">工牌已挂好</b></div>
+        <div class="notecard" style="text-align:center">明天 <b>17:30 开始检票</b>，到时见。<br>头像和名字「啪」地盖印上去，挂绳晃两下停稳</div>
+        <div class="ghostbtn" style="margin-top:auto">看看我的车队</div>
+      </div></div>
+      <div class="phonecap">F7 · 工牌生成 · #2 预备 + #5 跟随 + #10 盖印夸张</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 00 IDLE ============ -->
+<section class="phase" data-screen-label="00 平峰" style="--pc:var(--caramel)">
+  <div class="phead"><span class="pno">00 IDLE</span><h3>平峰 · 等待发车</h3><span class="pen">一天中的大部分时间</span>
+    <p>信息密度最低的一页：只回答「几点发车、还有多久、我们攒了多少班」。三花打盹，倒计时进最后 1 小时坐起、最后 10 分钟起身。</p></div>
+  <div class="pbody">
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#F0ECE5">
+        <div class="notch"></div>
+        <div class="sbar"><b>13:28</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="stationboard">
+          <svg class="bus" width="40" height="33" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+          <div class="sb-route"><b>G604 · 开往 家</b><span>今日 18:00 发车 · 17:30 检票</span></div>
+          <span class="pill" style="--pp:var(--caramel-p);--pd:var(--caramel-d)">运行中</span>
+        </div>
+        <div class="punch cdcard">
+          <small>距离发车</small>
+          <div class="dg"><sup>T−</sup>04:32:10</div>
+          <div class="perf" style="margin:10px 0 8px"></div>
+          <div class="cdnote">等宽数字 · 翻牌式跳动</div>
+        </div>
+        <div class="wcard">
+          <h5>车队印章 <em>STREAK</em></h5>
+          <div class="streakrow">
+            <span class="n">12</span>
+            <span class="lbl">连续准点发车<br>第 13 班今晚开</span>
+            <span class="stamps">
+              <i><b>一</b></i><i><b>二</b></i><i><b>三</b></i><i><b>四</b></i><i class="today" style="background:transparent;border:2.5px dashed var(--gold);outline:none"><b>五</b></i><i class="off"><b>六</b></i><i class="off"><b>日</b></i>
+            </span>
+          </div>
+        </div>
+        <div class="wcard" style="padding-bottom:13px">
+          <h5>乘务名单 <em>8 人 · 仅展示</em></h5>
+          <div class="wall">
+            <div class="mb me"><i></i><em>⚡</em><b>阿轩</b></div>
+            <div class="mb"><i></i><em>🦖</em><b>老K</b></div>
+            <div class="mb"><i></i><em>🍑</em><b>苗苗</b></div>
+            <div class="mb"><i></i><em>🛠️</em><b>大鹏</b></div>
+            <div class="mb"><i></i><em>🌙</em><b>Lily</b></div>
+            <div class="mb"><i></i><em>🔥</em><b>强哥</b></div>
+            <div class="mb"><i></i><em>🎧</em><b>小七</b></div>
+            <div class="mb"><i></i><em>🧊</em><b>楠楠</b></div>
+          </div>
+        </div>
+        <div class="catspot">
+          <span class="zzz" style="right:112px;top:6px">Z</span>
+          <span class="zzz" style="right:96px;top:-12px;font-size:12px">z</span>
+          <svg width="108" viewBox="0 0 160 200">
+            <use href="#cat-calico"/>
+            <circle cx="59" cy="49" r="7" fill="#FBF9F6"/><circle cx="101" cy="49" r="7" fill="#FBF9F6"/>
+            <path d="M52 49 Q59 55 66 49 M94 49 Q101 55 108 49" fill="none" stroke="#211E1A" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div></div>
+      <div class="phonecap">00 · IDLE · 底染焦糖 8%</div>
+    </div>
+    <aside class="layers">
+      <h4>图层拆解</h4><span class="sub">top → bottom</span>
+      <div class="lrow"><span class="ltag lt5">L5</span><div class="lbody"><b>特效层</b><p>静默。全天通知配额 4 条，平峰一条都不发。</p></div></div>
+      <div class="lrow"><span class="ltag lt4">L4</span><div class="lbody"><b>操作层</b><p>工牌墙纯展示不可操作——检票未开始，防误触。</p></div></div>
+      <div class="lrow"><span class="ltag lt3">L3</span><div class="lbody"><b>吉祥物层（开）</b><p>情绪页开启：三花闭眼打盹 + Zzz；点击随机播放小 reaction（彩蛋）。皮肤可换班班小巴。</p><em>T−60min 坐起 · T−10min 起身揉眼</em></div></div>
+      <div class="lrow"><span class="ltag lt2">L2</span><div class="lbody"><b>舞台层</b><p>倒计时票卡（切口 + 撕票线）+ streak 印章板。</p><em>数字翻牌 rotateX · 每秒 1 次 · spring(300,20)</em></div></div>
+      <div class="lrow"><span class="ltag lt1">L1</span><div class="lbody"><b>站牌层</b><p>G604 · 开往 家 · 运行中药丸（焦糖）。</p></div></div>
+      <div class="lrow"><span class="ltag lt0">L0</span><div class="lbody"><b>底色纸</b><p>#F0ECE5 = 暖灰 + 焦糖 8%。</p></div></div>
+      <div class="mrow"><span class="mchip">翻牌 500ms/位</span><span class="mchip">点猫彩蛋 whileTap</span><span class="mchip">进入最后1h换猫姿态</span><span class="mchip">原则 #8 次要 · #9 节奏</span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ 01 BOARDING ============ -->
+<section class="phase" data-screen-label="01 检票中" style="--pc:var(--amber)">
+  <div class="phead"><span class="pno">01 BOARDING</span><h3>检票中 · 刷工牌</h3><span class="pen">T−30 → T−0 · 第一爽点</span>
+    <p>闸机从屏幕底部弹簧升起。按住工牌拖向感应区：磁吸 →「嘀」+ 轻震 + 琥珀波纹 → 咔嚓打出车票 → 飞入票箱，计数翻牌。只展示投了的人，永不显示「谁还没投」。</p></div>
+  <div class="pbody">
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#F5EEDD">
+        <div class="notch"></div>
+        <div class="sbar"><b>17:47</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="toast" style="--tp:var(--amber-p)"><span class="tdot">🚌</span><p>G604 开始检票，干完活的把工牌刷上<span>17:30 · 今天第 1/4 条通知</span></p></div>
+        <div class="stationboard" style="margin-top:44px">
+          <svg class="bus" width="40" height="33" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+          <div class="sb-route"><b>G604 · 开往 家</b><span>发车 18:00 · 距发车 00:12:45</span></div>
+          <span class="pill" style="--pp:var(--amber-p);--pd:var(--amber-d)">检票中</span>
+        </div>
+        <div class="gatezone">
+          <figure class="gate" style="margin:0">
+            <svg width="112" viewBox="0 0 190 140"><use href="#gate-n"/></svg>
+            <figcaption>感应区 · 拖到这里</figcaption>
+          </figure>
+          <div class="punch boxcard">
+            <small>已检票</small>
+            <div class="cnt">4 <span>/ 8</span></div>
+            <div class="slot"></div>
+            <span class="who">最新入箱 · Lily 🌙 · 座号 04</span>
+          </div>
+        </div>
+        <div class="flytix">
+          <div class="mt" style="left:2px;top:6px;transform:rotate(-5deg)"><span class="no">01</span>🦖 老K</div>
+          <div class="mt" style="left:124px;top:26px;transform:rotate(3deg)"><span class="no">02</span>🍑 苗苗</div>
+          <div class="mt" style="left:246px;top:2px;transform:rotate(-2deg)"><span class="no">04</span>🌙 Lily</div>
+        </div>
+        <div class="mybadge" style="margin-top:auto">
+          <span class="av">⚡</span>
+          <span class="nm"><b>阿轩</b><span>G604 · 乘务工牌</span></span>
+          <span class="drag">按住 → 拖向闸机<b>刷卡检票</b></span>
+        </div>
+        <div class="notecard"><b>反悔通道：</b>开奖前点自己的票随时撤回，零惩罚 · 不做红名单，永不展示未投名单</div>
+      </div></div>
+      <div class="phonecap">01 · BOARDING · 无吉祥物 · 操作沉底</div>
+    </div>
+    <aside class="layers">
+      <h4>图层拆解</h4><span class="sub">top → bottom</span>
+      <div class="lrow"><span class="ltag lt5">L5</span><div class="lbody"><b>特效层</b><p>开检 toast（当日第 1 条）；T−5 且人数不足时唯一一条「还差 1 人」。刷卡命中：琥珀波纹 + 10ms 轻震 +「嘀」。</p></div></div>
+      <div class="lrow"><span class="ltag lt4">L4</span><div class="lbody"><b>操作层</b><p>我的工牌：按住拖拽，跟手 + 惯性摆动；进磁吸半径被吸附。</p><em>drag + dragElastic · 磁吸半径 60px · touch-action:none</em></div></div>
+      <div class="lrow"><span class="ltag lt3">L3</span><div class="lbody"><b>吉祥物层</b><p>本页关闭——刷卡、飞票、翻牌已经够热闹，主操作不容抢戏。（可选开启：玳瑁趴闸机边）</p></div></div>
+      <div class="lrow"><span class="ltag lt2">L2</span><div class="lbody"><b>舞台层</b><p>闸机 + 票箱卡（切口）。出票「咔嚓」过冲回弹；票飞入箱，箱体受击下压再回弹。</p><em>squash &amp; stretch · 计数翻牌 · 队友票带头像实时飞入</em></div></div>
+      <div class="lrow"><span class="ltag lt1">L1</span><div class="lbody"><b>站牌层</b><p>状态药丸切「检票中」（琥珀），副行改「距发车」。</p></div></div>
+      <div class="lrow"><span class="ltag lt0">L0</span><div class="lbody"><b>底色纸</b><p>#F5EEDD = 暖灰 + 琥珀 12%，交叉淡入 360ms。</p></div></div>
+      <div class="mrow"><span class="mchip">闸机入场 spring 底部升起</span><span class="mchip">撤票 = 倒放飞入</span><span class="mchip">iOS 首触解锁 AudioContext</span><span class="mchip">原则 #1 · #2 · #5 · #7</span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ 02 DRAWING ============ -->
+<section class="phase" data-screen-label="02 开奖" style="--pc:var(--gold)">
+  <div class="phead"><span class="pno">02 DRAWING</span><h3>开奖 · 摇号鼓</h3><span class="pen">T−0 · 约 20 秒 · 全员同步播放</span>
+    <p>到点自动开演，这本身就是「下班了」的集体信号。票箱盖盖变形成鼓 → 摇动渐强 → 逐张吐票 ×3（背面 → 停 0.8s → 翻面 → 金章砸下）。结果先定、动画后演，多端永远同步。</p></div>
+  <div class="pbody">
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#F0EBDE">
+        <div class="notch"></div>
+        <div class="sbar"><b>18:00</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="stationboard">
+          <svg class="bus" width="40" height="33" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+          <div class="sb-route"><b>G604 · 开往 家</b><span>检票已截止 · 6 人进箱</span></div>
+          <span class="pill" style="--pp:var(--gold-p);--pd:var(--gold-d)">开奖中</span>
+        </div>
+        <div class="statusword"><small>DRAWING</small><b>今晚谁带队</b><span class="bar" style="--ac:var(--gold)"></span></div>
+        <div class="drumzone">
+          <svg width="228" viewBox="0 0 220 190" style="margin:0 auto"><use href="#drum-n"/></svg>
+        </div>
+        <p class="drawcap">第 <b>3</b> 位列车长即将揭晓 · 鼓声渐强 · 连续微震</p>
+        <div class="revealrow">
+          <div class="gt gold"><span class="seal">列车长</span><em>🦖</em><b>老K</b><span>NO.1</span></div>
+          <div class="gt gold"><span class="seal">列车长</span><em>🍑</em><b>苗苗</b><span>NO.2</span></div>
+          <div class="gt back"><div class="q">?</div><span>NO.3</span></div>
+        </div>
+        <div class="notecard" style="text-align:center;margin-top:auto"><b>「不是他们想走，是车到点了。」</b>——第三张揭晓后浮出，随彩带定格</div>
+      </div></div>
+      <div class="phonecap">02 · DRAWING · 金色首次登场 · 无吉祥物</div>
+    </div>
+    <aside class="layers">
+      <h4>图层拆解</h4><span class="sub">top → bottom</span>
+      <div class="lrow"><span class="ltag lt5">L5</span><div class="lbody"><b>特效层</b><p>逐张揭晓：金章砸下震屏 + 小彩带；第三张后全屏金彩带雨 + 汽笛长鸣（全产品两处全屏庆祝之一）。被抽中者本机额外金光 + 重震。</p><em>confetti particleCount ≤ 120 · 结果先到 DRAW_RESULT，动画只是表演</em></div></div>
+      <div class="lrow"><span class="ltag lt4">L4</span><div class="lbody"><b>操作层</b><p>无操作——20 秒纯观演，悬念不给跳过按钮。</p></div></div>
+      <div class="lrow"><span class="ltag lt3">L3</span><div class="lbody"><b>吉祥物层</b><p>关闭——20 秒观演本身就是主角，屏幕上只留鼓和票。（可选开启：黑猫捂眼偷看，鼓越摇爪缝越大）</p></div></div>
+      <div class="lrow"><span class="ltag lt2">L2</span><div class="lbody"><b>舞台层</b><p>票箱 → 摇号鼓变形；鼓摆幅渐增（anticipation）；吐票背面朝上滑到中央，停 0.8s 翻面，头像弹出 overshoot。</p><em>每张 ~4s × 3 · 悬念三倍化</em></div></div>
+      <div class="lrow"><span class="ltag lt1">L1</span><div class="lbody"><b>站牌层</b><p>药丸切「开奖中」——金色在此刻全产品首次出现。</p></div></div>
+      <div class="lrow"><span class="ltag lt0">L0</span><div class="lbody"><b>底色纸</b><p>#F0EBDE，比检票略沉，把亮度留给金色。</p></div></div>
+      <div class="mrow"><span class="mchip">抽取数 clamp(round(n/3),1,3)</span><span class="mchip">n ≤ 3 全员列车长跳过开奖</span><span class="mchip">鼓声 + 连续微震</span><span class="mchip">原则 #2 预备 · #9 节奏 · #10 夸张</span></div>
+    </aside>
+  </div>
+</section>
+<!-- ============ 03 DEPARTING ============ -->
+<section class="phase" data-screen-label="03 发车中" style="--pc:var(--blue)">
+  <div class="phead"><span class="pno">03 DEPARTING</span><h3>发车中 · 角色分叉</h3><span class="pen">开奖后 · 列车长 / 乘客 双视角</span>
+    <p>同一相位按角色渲染两套 L2/L4：列车长拿到金边发车令 + 收拾清单 + 滑动发车；乘客看到「列车长正在收拾行李」。口径：全队都走，列车长只是先站起来的那个。</p></div>
+  <div class="pbody">
+    <div class="phones">
+      <div class="phonecol">
+        <div class="phone"><div class="screen" style="--pg:#EAEDF4">
+          <div class="notch"></div>
+          <div class="sbar"><b>18:01</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+          <div class="stationboard">
+            <svg class="bus" width="40" height="33" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+            <div class="sb-route"><b>G604 · 开往 家</b><span>列车长 3 人 · 等任一人发车</span></div>
+            <span class="pill" style="--pp:var(--blue-p);--pd:var(--blue-d)">发车中</span>
+          </div>
+          <div class="decree">
+            <div class="gband"></div>
+            <div class="dwrap">
+              <span class="dseal">接令</span>
+              <small>发 车 令</small>
+              <h6>G604 请求发车</h6>
+              <p>你是今晚 3 位列车长之一 · 婉拒重抽每人每天一次</p>
+              <div class="dbtns"><span class="ok">已接令</span><span class="no">今天真不行</span></div>
+            </div>
+          </div>
+          <div class="chk">
+            <div class="ckrow done"><span class="ckbox"></span><span>合上电脑</span></div>
+            <div class="ckrow done"><span class="ckbox"></span><span>收拾背包</span></div>
+            <div class="ckrow"><span class="ckbox"></span><span>起身出发</span></div>
+          </div>
+          <div class="slide" style="margin-top:auto"><span class="hint">滑 动 发 车</span><span class="thumb">列车长证</span></div>
+        </div></div>
+        <div class="phonecap">03A · 列车长视角 · 无吉祥物 · 滑块沉底</div>
+      </div>
+      <div class="phonecol">
+        <div class="phone"><div class="screen" style="--pg:#EAEDF4">
+          <div class="notch"></div>
+          <div class="sbar"><b>18:01</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+          <div class="stationboard">
+            <svg class="bus" width="40" height="33" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+            <div class="sb-route"><b>G604 · 开往 家</b><span>你的座号 05 · 已在车上等</span></div>
+            <span class="pill" style="--pp:var(--blue-p);--pd:var(--blue-d)">发车中</span>
+          </div>
+          <div class="punch waitcard">
+            <div class="wt">列车长正在收拾行李<span class="dots"><i></i><i></i><i></i></span></div>
+            <div class="ws">任一位滑动发车，全员发车</div>
+          </div>
+          <div class="condrow">
+            <div class="cond"><em>🦖</em><b>老K</b><span>收拾中 2/3</span></div>
+            <div class="cond"><em>🍑</em><b>苗苗</b><span>已就绪</span></div>
+            <div class="cond gold"><em>🔥</em><b>强哥</b><span>接令中</span></div>
+          </div>
+          <div class="notecard" style="text-align:center;margin-top:auto">你也可以开始合电脑了——<b>全队都走</b>，列车长只是先站起来的那个</div>
+        </div></div>
+        <div class="phonecap">03B · 乘客视角 · 温和提示不催促</div>
+      </div>
+    </div>
+    <aside class="layers">
+      <h4>图层拆解</h4><span class="sub">top → bottom · 双视角只换 L2 / L4</span>
+      <div class="lrow"><span class="ltag lt5">L5</span><div class="lbody"><b>特效层</b><p>接令盖章动画；滑到底汽笛 + 双震广播全队。婉拒 → 鼓快速补抽 10s 简化版；10 秒不响应视为婉拒自动重抽。</p></div></div>
+      <div class="lrow"><span class="ltag lt4">L4</span><div class="lbody"><b>操作层</b><p>列车长：slide-to-depart 大滑块，列车长证跟着滑块走；乘客：无主操作，静候汽笛。</p><em>dragConstraints 轨道内 · 滑过 85% 触发 DEPART</em></div></div>
+      <div class="lrow"><span class="ltag lt3">L3</span><div class="lbody"><b>吉祥物层</b><p>关闭——发车令、清单、滑轨是唯一焦点；行动页不放装饰。（可选开启：蓝猫帮忙收拾）</p></div></div>
+      <div class="lrow"><span class="ltag lt2">L2</span><div class="lbody"><b>舞台层</b><p>列车长：发车令（金边横幅 + 接令章）+ 三格收拾清单逐格划掉；乘客：等待卡 + 三位列车长实时状态。</p><em>清单划线 pathLength 动画 · 状态 chip 实时同步</em></div></div>
+      <div class="lrow"><span class="ltag lt1">L1</span><div class="lbody"><b>站牌层</b><p>药丸切「发车中」（蓝）；副行按角色显示带队 / 座号信息。</p></div></div>
+      <div class="lrow"><span class="ltag lt0">L0</span><div class="lbody"><b>底色纸</b><p>#EAEDF4 = 暖灰 + 蓝 9%，全产品唯一冷底，标记「行动时刻」。</p></div></div>
+      <div class="mrow"><span class="mchip">接令按钮 whileTap 0.96</span><span class="mchip">滑块回弹 spring(400,28)</span><span class="mchip">汽笛 + navigator.vibrate([80,40,80])</span><span class="mchip">原则 #2 · #6 · #10</span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ 04 DEPARTED ============ -->
+<section class="phase" data-screen-label="04 已发车" style="--pc:var(--orange)">
+  <div class="phead"><span class="pno">04 DEPARTED</span><h3>已发车 · 车厢视图</h3><span class="pen">汽笛之后 · 全员跟车</span>
+    <p>任一列车长滑动发车，全员收到汽笛推送，屏幕切换成车厢：车头是列车长，身后车厢逐渐坐满。每个人起身离开工位时点「已上车」，头像弹跳入座。</p></div>
+  <div class="pbody">
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#F8ECDA">
+        <div class="notch"></div>
+        <div class="sbar"><b>18:04</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="toast" style="--tp:var(--orange-p)"><span class="tdot">🚂</span><p>G604 已发车，跟上！<span>18:02 · 今天第 3/4 条通知</span></p></div>
+        <div class="stationboard" style="margin-top:44px">
+          <svg class="bus" width="40" height="33" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+          <div class="sb-route"><b>G604 · 开往 家</b><span>18:02 实发 · 准点</span></div>
+          <span class="pill" style="--pp:var(--orange-p);--pd:var(--orange-d)">已发车</span>
+        </div>
+        <div class="statusword"><small>DEPARTED</small><b>已发车</b><span class="bar" style="--ac:var(--orange)"></span></div>
+        <div style="position:relative;margin-top:26px">
+          <svg style="position:absolute;right:12px;top:-58px;width:150px;z-index:2;filter:drop-shadow(0 8px 12px rgba(48,39,26,.15))" viewBox="0 0 265 185"><use href="#cat-orange"/></svg>
+          <div class="punch traincard">
+            <small>车厢实况</small>
+            <svg width="100%" viewBox="0 0 340 132">
+              <path d="M6 120 H334" stroke="#CFC9C0" stroke-width="3" stroke-dasharray="10 10" stroke-linecap="round"/>
+              <path d="M4 62 H18 M0 78 H14 M6 94 H20" stroke="#B4ADA1" stroke-width="4" stroke-linecap="round"/>
+              <path d="M30 52 H92 C110 52 118 64 122 78 L122 108 H30 Z" fill="#C96E12"/>
+              <rect x="42" y="36" width="12" height="18" rx="4" fill="#3A3631"/>
+              <rect x="42" y="62" width="30" height="26" rx="8" fill="#FBF9F6"/>
+              <text x="47" y="82" font-size="18">🦖</text>
+              <circle cx="48" cy="110" r="10" fill="#3A3631"/><circle cx="98" cy="110" r="10" fill="#3A3631"/>
+              <rect x="134" y="58" width="92" height="50" rx="12" fill="#F3E6CF"/>
+              <rect x="142" y="66" width="30" height="26" rx="8" fill="#FBF9F6"/><text x="147" y="86" font-size="18">🍑</text>
+              <rect x="186" y="66" width="30" height="26" rx="8" fill="#FBF9F6"/><text x="191" y="86" font-size="18">🔥</text>
+              <circle cx="152" cy="110" r="10" fill="#3A3631"/><circle cx="208" cy="110" r="10" fill="#3A3631"/>
+              <rect x="238" y="58" width="92" height="50" rx="12" fill="#F3E6CF"/>
+              <rect x="246" y="66" width="30" height="26" rx="8" fill="#FBF9F6"/><text x="251" y="86" font-size="18">🌙</text>
+              <rect x="290" y="66" width="30" height="26" rx="8" fill="none" stroke="#CFC9C0" stroke-width="2.5" stroke-dasharray="4 5"/>
+              <circle cx="256" cy="110" r="10" fill="#3A3631"/><circle cx="312" cy="110" r="10" fill="#3A3631"/>
+            </svg>
+            <div class="boardcnt"><b>6</b><span>/ 8 已上车</span></div>
+          </div>
+        </div>
+        <div class="bigbtn" style="--ac:var(--orange);--acs:rgba(201,110,18,.32);margin-top:auto">已 上 车</div>
+        <div class="notecard">补票通道：现在才干完活也能刷工牌出「无座票」，算上车不参与抽签 · 没上车的票不点名、不追责</div>
+      </div></div>
+      <div class="phonecap">04 · DEPARTED · 橘猫趴上车顶</div>
+    </div>
+    <aside class="layers">
+      <h4>图层拆解</h4><span class="sub">top → bottom</span>
+      <div class="lrow"><span class="ltag lt5">L5</span><div class="lbody"><b>特效层</b><p>汽笛推送 toast（第 3 条）；每次「已上车」一小撮橘色纸屑从座位弹出。</p></div></div>
+      <div class="lrow"><span class="ltag lt4">L4</span><div class="lbody"><b>操作层</b><p>大按钮「已上车」——一次性、按完变为自己的座位高亮。弹性时间的人不投票也能点（弱参与态）。</p><em>点击 → BOARD · 头像抛物线跳入车窗 · 弹跳入座</em></div></div>
+      <div class="lrow"><span class="ltag lt3">L3</span><div class="lbody"><b>吉祥物层（开）</b><p>情绪页开启：橘猫趴在车厢卡顶沿，爪子尾巴垂进卡里——参考图的招牌姿势。可换班班小巴或整层关掉。</p></div></div>
+      <div class="lrow"><span class="ltag lt2">L2</span><div class="lbody"><b>舞台层</b><p>车厢卡（切口）：车头列车长 + 车窗头像逐个补位，空位虚线。全员实时看到坐满过程。</p><em>入座 spring(300,20) + squash · 车轮持续慢转</em></div></div>
+      <div class="lrow"><span class="ltag lt1">L1</span><div class="lbody"><b>站牌层</b><p>药丸切「已发车」（橘），副行记录实发时刻。</p></div></div>
+      <div class="lrow"><span class="ltag lt0">L0</span><div class="lbody"><b>底色纸</b><p>#F8ECDA = 暖灰 + 橘 12%，全天最暖的一屏。</p></div></div>
+      <div class="mrow"><span class="mchip">发车后 ~30min 自动转收班</span><span class="mchip">速度线 loop 1.2s</span><span class="mchip">原则 #1 挤压 · #7 弧线入座</span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ 05 SETTLED ============ -->
+<section class="phase" data-screen-label="05 收班" style="--pc:var(--gray)">
+  <div class="phead"><span class="pno">05 SETTLED</span><h3>收班 · 结算盖章</h3><span class="pen">发车后 ~30 分钟</span>
+    <p>结算卡盖「准点」章，streak +1，小火车印章「哐」地盖上今日格。只奖励，不追责：结算只统计上车人数。7 / 30 / 100 班触发全屏庆祝 + 生成战报分享卡。</p></div>
+  <div class="pbody">
+    <div class="phones">
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#EFEDE8">
+        <div class="notch"></div>
+        <div class="sbar"><b>18:32</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="stationboard">
+          <svg class="bus" width="40" height="33" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+          <div class="sb-route"><b>G604 · 开往 家</b><span>今日已收班 · 明日照常</span></div>
+          <span class="pill" style="--pp:#E4E1DB;--pd:#6E675C">已收班</span>
+        </div>
+        <div style="position:relative;margin-top:34px">
+          <svg style="position:absolute;right:8px;top:-50px;width:132px;z-index:2;filter:drop-shadow(0 8px 12px rgba(48,39,26,.15))" viewBox="0 0 255 150"><use href="#cat-whitegray"/></svg>
+          <div class="punch settle">
+            <div class="sthead"><b>G604 · 准点发出</b><span>2026.08.29 · 18:02</span></div>
+            <div class="perf" style="margin:0 18px"></div>
+            <div class="stbody">
+              <span class="pseal">准点</span>
+              <span class="snum">12</span><span class="sarrow">→</span><span class="snum">13<small> 班</small></span>
+              <span class="slbl">全员 8 人 · 6 人上车<br>streak +1</span>
+            </div>
+          </div>
+        </div>
+        <div class="wcard">
+          <h5>本周印章 <em>STAMP CALENDAR</em></h5>
+          <div class="streakrow" style="justify-content:center">
+            <span class="stamps" style="margin:0">
+              <i><b>一</b></i><i><b>二</b></i><i><b>三</b></i><i><b>四</b></i><i class="today"><b>五</b></i><i class="off"><b>六</b></i><i class="off"><b>日</b></i>
+            </span>
+          </div>
+        </div>
+        <div class="ghostbtn" style="margin-top:auto">生成战报卡 · 发到群里</div>
+        <div class="nextrun"><span>下一班 · 明天 18:00</span><span>·</span><span>检票 17:30</span></div>
+        </div></div>
+      <div class="phonecap">05A · SETTLED · 日常收班</div>
+    </div>
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#F3EEE2">
+        <div class="notch"></div>
+        <div class="sbar"><b>18:33</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="stationboard">
+          <svg class="bus" width="40" height="33" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+          <div class="sb-route"><b>G604 · 开往 家</b><span>连续第 7 班准点发出</span></div>
+          <span class="pill" style="--pp:var(--gold-p);--pd:var(--gold-d)">里程碑</span>
+        </div>
+        <div class="mileblock">
+          <span class="spark" style="left:52px;top:14px">✦</span>
+          <span class="spark" style="right:58px;top:40px;font-size:15px">✦</span>
+          <span class="spark" style="left:84px;bottom:30px;font-size:13px">✦</span>
+          <span class="spark" style="right:84px;bottom:6px">✦</span>
+          <div class="mnum">7</div>
+          <div class="msub">连 续 准 点 · 班</div>
+        </div>
+        <div class="punch" style="padding:14px 18px;text-align:center">
+          <div style="font-size:14px;font-weight:900">整整一周，无一缺席</div>
+          <div class="perf" style="margin:9px 0 8px"></div>
+          <div style="font-size:10.5px;color:var(--mut)">下一枚里程碑 · 30 班 · 攒到就放大的</div>
+        </div>
+        <div class="bigbtn" style="--ac:var(--gold);--acs:rgba(143,100,16,.30);margin-top:auto">生 成 战 报 卡</div>
+        <div class="notecard" style="text-align:center;margin-top:10px">全屏彩带雨 + 撒花——第二处也是最后一处全屏庆祝（#10 夸张 · 用滥就贬值）</div>
+      </div></div>
+      <div class="phonecap">05B · 里程碑（7 / 30 / 100 班）· 全屏庆祝</div>
+    </div>
+    <div class="phonecol" style="justify-content:flex-start;gap:12px">
+      <div class="punch sharecard">
+        <div class="shl">
+          <small>OFF WORK EXPRESS · WEEKLY REPORT</small>
+          <div class="sht">G604 连续准点<br>发出 7 班</div>
+          <div class="shm">8 人小队 · 平均实发 18:02<br>2026.08.24 – 08.29 · 无一缺席</div>
+        </div>
+        <div class="shperf"></div>
+        <div class="shr">
+          <span class="shseal">准点</span>
+          <span class="shn">7</span>
+        </div>
+      </div>
+      <div class="phonecap">战报分享卡 · 票样式 OG 图 · 传播物料 2 号</div>
+      <div class="notecard" style="max-width:470px">存图发群的那张图：尺寸 1200×630（OG 标准），版式复用 2:1 车票基因。生成时间点 = 点击 05B 的「生成战报卡」。</div>
+    </div>
+    </div>
+    <aside class="layers">
+      <h4>图层拆解</h4><span class="sub">top → bottom</span>
+      <div class="lrow"><span class="ltag lt5">L5</span><div class="lbody"><b>特效层</b><p>印章「哐」落格震一下；7 / 30 / 100 班里程碑 → 全屏彩带 + 猫撒花（第二处全屏庆祝）。</p></div></div>
+      <div class="lrow"><span class="ltag lt4">L4</span><div class="lbody"><b>操作层</b><p>「生成战报卡」——车票样式分享图，存图发群，第二个传播物料。</p></div></div>
+      <div class="lrow"><span class="ltag lt3">L3</span><div class="lbody"><b>吉祥物层（开）</b><p>情绪页开启：灰白猫趴上结算卡顶沿闭眼收工。收班要的就是这口松弛，去掉亦可。</p></div></div>
+      <div class="lrow"><span class="ltag lt2">L2</span><div class="lbody"><b>舞台层</b><p>结算票（切口 + 撕票线 + 准点章）+ 印章周历，今日格金章放大落下。</p><em>章落 scale 2.2 → 1 · rotate −14° · 震屏 1 次</em></div></div>
+      <div class="lrow"><span class="ltag lt1">L1</span><div class="lbody"><b>站牌层</b><p>药丸转灰「已收班」，一切归于平静。</p></div></div>
+      <div class="lrow"><span class="ltag lt0">L0</span><div class="lbody"><b>底色纸</b><p>#EFEDE8 回到近原色暖灰——一天的色彩循环闭环。</p></div></div>
+      <div class="mrow"><span class="mchip">streak 存 localStorage</span><span class="mchip">战报卡 = 票样式 OG 图</span><span class="mchip">原则 #9 · #10 章落</span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ 06 SUSPENDED ============ -->
+<section class="phase" data-screen-label="06 停运" style="--pc:var(--pink-d)">
+  <div class="phead"><span class="pno">06 SUSPENDED</span><h3>今日停运 · 宽容失败</h3><span class="pen">T−0 检票数 &lt; 最少发车数</span>
+    <p>人数不够就不开奖：不怪任何人，streak 冻结而非清零（Duolingo streak freeze 同款宽容），明天照常发车。粉猫蔫着，但票根还在。</p></div>
+  <div class="pbody">
+    <div class="phonecol">
+      <div class="phone"><div class="screen" style="--pg:#F6E9EC">
+        <div class="notch"></div>
+        <div class="sbar"><b>18:00</b><span class="si"><i class="s1"></i><i class="s2"></i></span></div>
+        <div class="stationboard">
+          <svg class="bus" width="40" height="33" viewBox="0 0 62 52"><use href="#bus-n"/></svg>
+          <div class="sb-route"><b>G604 · 开往 家</b><span>今日班次取消</span></div>
+          <span class="pill" style="--pp:var(--pink-p);--pd:var(--pink-d)">今日停运</span>
+        </div>
+        <div class="statusword"><small>SUSPENDED</small><b>今日停运</b><span class="bar" style="--ac:var(--pink-d)"></span></div>
+        <div class="punch susp">
+          <div class="swt">客流不足，今天不发车</div>
+          <div class="sws">已检票 2 / 最少发车 3 · 差 1 人成班<br>不点名 · 不追责 · 票根保留</div>
+        </div>
+        <div class="freeze">
+          <span class="fi">❄</span>
+          <div><b>streak 12 班 · 已冻结</b><p>不清零，明天发车成功自动续上</p></div>
+        </div>
+        <div class="nextrun"><span>明天 17:30 检票</span><span>·</span><span>18:00 发车</span></div>
+        <div class="catspot" style="justify-content:center;padding-bottom:8px">
+          <svg width="132" viewBox="0 0 160 200" style="overflow:visible">
+            <path d="M118 6 C136 -6 148 8 134 18 C120 28 114 12 130 8 C148 3 152 22 136 28 C124 33 122 20 134 20" fill="none" stroke="#C87795" stroke-width="3.5" stroke-linecap="round"/>
+            <use href="#cat-pink"/>
+          </svg>
+        </div>
+      </div></div>
+      <div class="phonecap">06 · SUSPENDED · 唯一允许沮丧的一屏</div>
+    </div>
+    <aside class="layers">
+      <h4>图层拆解</h4><span class="sub">top → bottom</span>
+      <div class="lrow"><span class="ltag lt5">L5</span><div class="lbody"><b>特效层</b><p>无彩带无音效——失败不配特效，也不配羞辱。只有一条安静的收场文案。</p></div></div>
+      <div class="lrow"><span class="ltag lt4">L4</span><div class="lbody"><b>操作层</b><p>无操作。今天到此为止，不给「拉人补票」的挽留按钮。</p></div></div>
+      <div class="lrow"><span class="ltag lt3">L3</span><div class="lbody"><b>吉祥物层（开）</b><p>情绪页开启：粉猫蔫坐 + 挫败涂鸦（来自「发车失败」票参考）。失败页需要一点共情载体。</p></div></div>
+      <div class="lrow"><span class="ltag lt2">L2</span><div class="lbody"><b>舞台层</b><p>停运公告卡（切口）+ 冻结卡：❄ 冰蓝是全产品唯一一次冷灰蓝，只为「冻结」这个词服务。</p><em>冻结卡入场结一层薄霜 opacity 渐显</em></div></div>
+      <div class="lrow"><span class="ltag lt1">L1</span><div class="lbody"><b>站牌层</b><p>药丸切「今日停运」（粉）。</p></div></div>
+      <div class="lrow"><span class="ltag lt0">L0</span><div class="lbody"><b>底色纸</b><p>#F6E9EC = 暖灰 + 粉 14%，对应「发车失败」票的粉。</p></div></div>
+      <div class="mrow"><span class="mchip">streak 冻结非清零</span><span class="mchip">节假日可标停运日</span></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ S4 生图提示词包 ============ -->
+<section class="sec" data-screen-label="S4 生图提示词包">
+  <div class="shead"><span class="no">S4</span><h2>生图提示词包 · 插画管线</h2><span class="en">Image Prompt Pack</span></div>
+  <p class="slede">板上所有插画目前是手绘 SVG 占位，可整体升级为生图 PNG：每条 prompt = 下面的风格基底 + 单图描述，直接拼接发给生图模型；生成后按「落位」替换 defs 里同名 symbol。同步维护在 <b>designs/fache-layered-pages/生图提示词.md</b>（Codex 直接读这份）。</p>
+  <div class="plist">
+    <div class="prow note">
+      <div><span class="pid" style="background:var(--graphite)">BASE</span>
+      <div class="pname">风格基底 · 每条 prompt 前置拼接</div>
+      <div class="pmeta">统一要求：透明底 PNG · 单主体居中 · 画面里禁止出现任何文字字母</div></div>
+      <pre>Scandinavian flat illustration, paper cut-out style, matte solid colors, no outlines, soft rounded geometric shapes, minimal facial features, thin delicate whisker/detail lines, children's picture book aesthetic, generous negative space, subtle soft drop shadow only, no gradients, no text, no letters. Transparent background PNG.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-01</span>
+      <div class="pname">三花猫 · 坐 · 打盹</div>
+      <div class="pmeta">落位 00 平峰（闭眼）/ S1 主视觉票（睁眼） · 替换 #cat-calico · 1:1 透明底 · 两变体</div></div>
+      <pre>A calico cat sitting upright, tall rounded rectangular body, white fur #FBF9F6, one caramel #C6884A patch over the right ear with a small dark brown #78441F spot, tiny triangle ears, sleepy closed eyes drawn as two thin curved lines, tiny pink triangle nose, three thin whiskers on each side extending beyond the face, caramel tail curling up beside the body, front view, centered.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-02</span>
+      <div class="pname">玳瑁猫 · 趴 · 机警</div>
+      <div class="pmeta">落位 01 检票（可选开启） · 替换 #cat-tortie · 5:3 透明底</div></div>
+      <pre>A tortoiseshell cat lying down alert with head raised, long low rounded body, dark brown #78441F base fur with caramel #C6884A patches on body and half of the face, round amber #E2A33C eyes with black pupils, light cream whiskers, one caramel front paw tucked forward, thick dark brown tail curling up behind, side view.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-03</span>
+      <div class="pname">黑猫 · 坐 · 金瞳</div>
+      <div class="pmeta">落位 02 开奖（可选 · 捂眼变体） · 替换 #cat-black · 1:1 透明底</div></div>
+      <pre>A black cat #221F1C sitting upright, tall rounded body, tiny triangle ears, big round amber #E2A33C eyes with black pupils, tiny gray nose, light cream whiskers clearly visible against the black fur, thick black tail curling around the front left side, front view.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-04</span>
+      <div class="pname">蓝猫 · 坐</div>
+      <div class="pmeta">落位 03 发车（可选） · 替换 #cat-blue · 1:1 透明底</div></div>
+      <pre>A muted blue #4E7ECF cat sitting upright, slightly chunky rounded body, darker blue #3A62A6 inner ears and tail, round black dot eyes, tiny pink #E88AA0 triangle nose, dark blue whiskers, two lighter blue front paws visible at the bottom, front view.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-05</span>
+      <div class="pname">橘猫 · 趴挂沿</div>
+      <div class="pmeta">落位 04 已发车 · 趴车厢卡顶沿 · 替换 #cat-orange · 3:2 透明底 · 一爪一尾必须垂出下缘</div></div>
+      <pre>An orange #EF8A1E tabby cat lying relaxed on a ledge seen from the side, long rounded body with darker orange #C96E12 stripes on the back and two small stripes on the forehead, one front paw and a ring-striped tail hanging down over the ledge edge, round black dot eyes, tiny nose, thin dark whiskers, content expression, designed to overlap the top edge of a card below it.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-06</span>
+      <div class="pname">灰白猫 · 趴 · 闭眼</div>
+      <div class="pmeta">落位 05 收班 · 趴结算票顶沿 · 替换 #cat-whitegray · 3:2 透明底</div></div>
+      <pre>A white cat #FBF9F6 lying down completely relaxed, gray #9C978F patch over the left ear and eye area, two soft gray stripes on the rump, gray tail hanging down and curling, eyes closed as two gentle curved lines, tiny gray nose, thin whiskers, side view, very peaceful.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-07</span>
+      <div class="pname">粉猫 · 坐 · 蔫</div>
+      <div class="pmeta">落位 06 停运 · 替换 #cat-pink（涂鸦一起画） · 1:1 透明底</div></div>
+      <pre>A muted pink #EFA6BE cat sitting upright looking dejected, drooping thin whiskers angled downward, small frown, darker pink #D77E9C inner ears and tail, round black dot eyes, a small dark rose scribble doodle of frustration floating above its head, front view.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-08</span>
+      <div class="pname">摇号鼓</div>
+      <div class="pmeta">落位 02 开奖中央 · 替换 #drum-n · 1:1 透明底</div></div>
+      <pre>A golden lottery drum #D9A13B: large circle body, darker horizontal band #B9822A across the middle with two small rivets, a dark rounded ticket slot on the top face, two dark charcoal #3A3631 splayed legs and a small L-shaped crank handle with a round knob on the right, two gray motion arcs on the left side and two small golden sparkle ticks at the top right, side view.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-09</span>
+      <div class="pname">闸机</div>
+      <div class="pmeta">落位 01 检票「感应区」 · 替换 #gate-n · 4:3 透明底</div></div>
+      <pre>A minimal subway fare gate: two vertical charcoal #3A3631 rounded posts standing on a light gray base bar, a round amber #E2A64F sensor pad on the right post emitting two thin amber signal arcs, a dashed light gray vertical line marking the passage between the posts, front view.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-10</span>
+      <div class="pname">班班小巴（品牌标）</div>
+      <div class="pmeta">落位 站牌层 logo / 票头 · 替换 #bus-n · 1:1 透明底 · 变体睁眼/眯眼笑</div></div>
+      <pre>A tiny cute rounded bus, caramel #C6884A body with a darker #A96C33 stripe, two white rounded windows like friendly eyes, dark charcoal round wheels with gray hubs, slight smile implied by the front bumper curve, front three-quarter view, sticker-like.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-11</span>
+      <div class="pname">班班打盹 · 落地页主视觉</div>
+      <div class="pmeta">落位 F1 落地页 hero（350×216 显示） · 16:10 · 底 #EDEBE7 或透明</div></div>
+      <pre>The tiny caramel #C6884A rounded bus asleep at a minimal bus stop: closed eyes drawn as two curved lines on the windshield, three small round puffs floating above the roof suggesting snoring, a slim dark bus stop sign pole beside it, a thin crescent moon in the upper corner, quiet and cozy night-off mood.</pre>
+    </div>
+    <div class="prow">
+      <div><span class="pid">P-12</span>
+      <div class="pname">玩具小火车</div>
+      <div class="pmeta">落位 04 车厢卡 · 替换车厢 SVG · 5:2 透明底 · 车窗必须留空（头像 UI 动态贴）</div></div>
+      <pre>A toy train side view rolling to the right: burnt orange #C96E12 engine with a dark chimney and one empty white rounded window, pulling two cream #F3E6CF carriages each with two empty white rounded windows, dark charcoal round wheels, a dashed light gray track line under the wheels, two small gray speed lines behind the last carriage. Keep all windows empty.</pre>
+    </div>
+    <div class="prow note">
+      <div><span class="pid" style="background:var(--graphite)">P-13</span>
+      <div class="pname">二维码 · 不生图</div>
+      <div class="pmeta">F5 邀请卡右侧 104×104 —— 用项目已装的 qrcode 库生成真码，不走插画管线。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ handoff ============ -->
+<section class="handoff" data-screen-label="S9 交接">
+  <h2>工程交接 · 从设计板到 App.tsx</h2>
+  <div class="hgrid">
+    <div>
+      <ol>
+        <li><b>L0 底色纸</b> → App 外壳 motion.div 背景色随 phase 交叉淡入 360ms；现 theme.css 的暗夜色板整体替换为右侧 token。</li>
+        <li><b>L1 站牌层</b> → 现有 Header 组件保留结构，换纸卡皮肤；药丸色 = 相位点缀色淡底 + 深字。</li>
+        <li><b>L2 舞台层</b> → ui/phases/ 每相位一个主舞台组件，全部走 spring(300, 20)、入场 overshoot 5–10%，禁直线 ease。</li>
+        <li><b>L3 吉祥物层</b> → Mascot({phase, skin})，skin: 'cat' | 'bus' | 'none'，可整层关闭；情绪页开、操作页关。猫阵容 SVG 在本页 defs 可直接拷贝，班班小巴沿用 bus-n 加表情即可。</li>
+        <li><b>L4 操作层</b> → 一屏一主操作：drag 工牌 / 接令 / slide-to-depart / 已上车；全部 touch-action:none。</li>
+        <li><b>L5 特效层</b> → confetti + toast + haptics 走独立 portal；全屏庆祝只在第三位揭晓和 streak 里程碑。</li>
+        <li><b>金色纪律</b> → var(--gold) 只允许出现在 drawing 之后的组件里，代码 review 时可 grep 检查。</li>
+        <li><b>插画管线</b> → 所有插画现为 SVG 占位；按 S4 提示词包（同步维护于 生图提示词.md）用 Codex 生图 → 透明底 PNG → 按落位表替换同名 symbol。</li>
+        <li><b>动效纪律</b> → 每个镜头对照 S3 十二原则挑最小集合；交互反馈 ≤300ms，观演动画（开奖 20s）除外；一次只夸张一个通道。</li>
+      </ol>
+    </div>
+    <pre>:root {
+  <i>/* 纸面 */</i>
+  --bg: <b>#E8E5E0</b>;  --paper: <b>#FBF9F6</b>;  --ink: <b>#211E1A</b>;
+  --mut: <b>#8D867C</b>;  --line: <b>#DAD5CC</b>;
+  <i>/* 相位点缀 · 一相一色 */</i>
+  --idle: <b>#C6884A</b>;      <i>/* 焦糖 · 三花 */</i>
+  --boarding: <b>#E2A64F</b>;  <i>/* 琥珀 · 玳瑁 */</i>
+  --drawing: <b>#D9A13B</b>;   <i>/* 金 · 黑猫 · 开奖后解锁 */</i>
+  --departing: <b>#4E7ECF</b>; <i>/* 蓝 · 蓝猫 · 唯一冷色 */</i>
+  --departed: <b>#EF8A1E</b>;  <i>/* 橘 · 橘猫 */</i>
+  --settled: <b>#9C978F</b>;   <i>/* 暖灰 · 灰白猫 */</i>
+  --suspended: <b>#EFA6BE</b>; <i>/* 粉 · 粉猫 */</i>
+  <i>/* 屏底淡染 = color-mix(accent 8–12%, #EFEDE9) */</i>
+  <i>/* 弹簧基准 stiffness 300 · damping 20 · overshoot 5–10% */</i>
+}</pre>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

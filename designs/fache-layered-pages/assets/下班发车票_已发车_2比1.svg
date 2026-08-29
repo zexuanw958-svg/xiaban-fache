@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">下班发车票 · 已发车</title>
+  <desc id="desc">2比1比例的纯色扁平卡通车票，包含发车时间、发车日期和已发车状态。</desc>
+
+  <style>
+    .cn { font-family: 'Noto Sans CJK SC', 'PingFang SC', 'Microsoft YaHei', sans-serif; fill:#111111; }
+    .en { font-family: Arial, Helvetica, sans-serif; fill:#111111; }
+    .title { font-size:44px; font-weight:800; letter-spacing:5px; }
+    .subtitle { font-size:19px; font-weight:700; letter-spacing:1.6px; }
+    .label { font-size:25px; font-weight:700; letter-spacing:3px; }
+    .time { font-family: Arial, Helvetica, sans-serif; font-size:166px; font-weight:800; letter-spacing:-7px; fill:#111111; font-variant-numeric:tabular-nums; }
+    .date-label { font-size:22px; font-weight:700; letter-spacing:2px; }
+    .date { font-family: Arial, Helvetica, sans-serif; font-size:28px; font-weight:700; letter-spacing:1px; fill:#111111; font-variant-numeric:tabular-nums; }
+    .weekday { font-size:22px; font-weight:700; letter-spacing:2px; }
+    .status-label { font-size:23px; font-weight:700; letter-spacing:3px; }
+    .status { font-size:78px; font-weight:900; letter-spacing:4px; }
+    .line { fill:none; stroke:#111111; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+    .face { fill:none; stroke:#111111; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+  </style>
+
+
+  <defs>
+    <mask id="ticketMask">
+      <rect x="0" y="0" width="1200" height="600" rx="44" fill="white"/>
+      <circle cx="0" cy="300" r="54" fill="black"/>
+      <circle cx="1200" cy="300" r="54" fill="black"/>
+    </mask>
+  </defs>
+
+  <g mask="url(#ticketMask)">
+    <rect width="1200" height="600" fill="#FF8B18"/>
+
+    <g aria-label="车票标题与发车信息">
+      <circle cx="96" cy="98" r="35" fill="none" stroke="#111111" stroke-width="4"/>
+      <rect x="82" y="77" width="28" height="34" rx="6" fill="none" stroke="#111111" stroke-width="4"/>
+      <rect x="87" y="82" width="18" height="10" rx="2" fill="#111111"/>
+      <circle cx="89" cy="102" r="3.5" fill="#111111"/>
+      <circle cx="103" cy="102" r="3.5" fill="#111111"/>
+      <path d="M86 116 L80 123 M106 116 L112 123 M82 119 H110" class="line" stroke-width="3"/>
+      <text x="150" y="108" class="cn title">下班发车票</text>
+      <text x="151" y="143" class="en subtitle">OFF WORK EXPRESS</text>
+
+      <text x="66" y="224" class="cn label">发车时间</text>
+      <text x="58" y="382" class="time">18:00</text>
+      <text x="66" y="486" class="cn date-label">发车日期</text>
+      <text x="205" y="486" class="date">2024.05.24</text>
+      <text x="416" y="486" class="cn weekday">星期五</text>
+    </g>
+
+    <line x1="758" y1="54" x2="758" y2="546" stroke="#111111" stroke-width="4" stroke-linecap="round" stroke-dasharray="1 17"/>
+
+    <g aria-label="发车状态">
+      <text x="806" y="104" class="cn status-label">状态</text>
+      <text x="804" y="180" class="cn status" style="font-size:80px">已发车</text>
+      <line x1="808" y1="212" x2="850" y2="212" stroke="#111111" stroke-width="6" stroke-linecap="round"/>
+    </g>
+
+    <g aria-label="橙色躺卧猫咪">
+      <!-- body -->
+      <path d="M914 355 C968 315 1076 319 1138 371 C1172 400 1174 456 1142 489 C1111 521 1058 528 980 516 C946 511 916 494 902 467 C886 438 888 385 914 355 Z" fill="#EF7300"/>
+      <!-- tail -->
+      <path d="M1117 411 C1162 390 1181 407 1168 438 C1155 470 1127 478 1105 466" fill="none" stroke="#C45C00" stroke-width="23" stroke-linecap="round"/>
+      <!-- head -->
+      <path d="M810 352 L818 218 L865 262 L933 260 L978 215 L981 353 C982 411 947 445 895 445 C843 445 809 411 810 352 Z" fill="#F47B00"/>
+      <!-- chest/leg -->
+      <path d="M947 404 C938 443 927 483 931 527 C934 557 949 577 968 569 C989 559 982 537 970 518 C957 495 969 458 978 425" fill="#F47B00"/>
+      <path d="M947 404 C938 443 927 483 931 527 C934 557 949 577 968 569 C989 559 982 537 970 518 C957 495 969 458 978 425" fill="none" stroke="#C45C00" stroke-width="2"/>
+      <!-- ears inner -->
+      <path d="M826 238 L859 268 L832 278 Z" fill="#C45C00"/>
+      <path d="M968 236 L939 266 L967 277 Z" fill="#C45C00"/>
+      <!-- stripes -->
+      <path d="M925 329 C944 315 956 302 962 284" fill="none" stroke="#B85600" stroke-width="18" stroke-linecap="round"/>
+      <path d="M1006 351 C1025 365 1035 385 1035 409" fill="none" stroke="#B85600" stroke-width="24" stroke-linecap="round"/>
+      <path d="M1067 349 C1086 366 1093 385 1091 407" fill="none" stroke="#B85600" stroke-width="24" stroke-linecap="round"/>
+      <path d="M1121 363 C1134 380 1138 398 1133 417" fill="none" stroke="#B85600" stroke-width="22" stroke-linecap="round"/>
+      <!-- face -->
+      <ellipse cx="870" cy="330" rx="8" ry="12" fill="#111111"/>
+      <ellipse cx="926" cy="330" rx="8" ry="12" fill="#111111"/>
+      <path d="M893 349 L902 349 L897 356 Z" fill="#111111"/>
+      <path d="M897 357 C894 369 882 370 878 360 M897 357 C900 369 912 370 916 360" class="face" stroke-width="3"/>
+      <path d="M852 352 L796 339 M851 365 L790 365 M853 378 L801 391 M940 352 L995 339 M940 365 L1000 365 M938 378 L989 391" class="face" stroke-width="3"/>
+    </g>
+
+  </g>
+</svg>

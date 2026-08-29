@@ -1,0 +1,18 @@
+{
+  "type": "design",
+  "designSystems": [],
+  "primaryDesignSystem": null,
+  "assets": {
+    "下班发车 · 分层页面 · 北欧风": {
+      "versions": [
+        {
+          "path": "分层页面设计板 · 北欧风.html",
+          "createdAt": "2026-08-29T07:40:48.292Z",
+          "status": "needs-review"
+        }
+      ]
+    }
+  },
+  "createdAt": "2026-08-29T07:40:48.293Z",
+  "updatedAt": "2026-08-29T08:24:28.442Z"
+}
