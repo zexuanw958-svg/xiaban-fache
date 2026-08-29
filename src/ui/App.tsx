@@ -69,6 +69,23 @@ function burst(big = false) {
   })
 }
 
+function BusMark({ className = 'brand-bus' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 72 48" role="img" aria-label="G604 小巴">
+      <path className="bus-mark-body" d="M8 16.5C8 10.7 12.7 6 18.5 6h34.8c5.1 0 9.4 3.6 10.6 8.6l3.1 13.5c1.1 4.8-2.5 9.4-7.4 9.4H13.3C7.9 37.5 4 33.6 4 28.2v-5.8c0-2.1 1.7-3.9 4-3.9v-2Z" />
+      <path className="bus-mark-stripe" d="M8 25.3h58.8l1.4 6.2H8z" />
+      <rect className="bus-mark-window" x="13" y="11" width="31" height="11" rx="3.5" />
+      <rect className="bus-mark-window" x="47" y="11" width="10" height="11" rx="3.5" />
+      <rect className="bus-mark-window" x="59.5" y="11" width="4.5" height="11" rx="2.2" />
+      <circle className="bus-mark-wheel" cx="19" cy="36.5" r="5.5" />
+      <circle className="bus-mark-wheel" cx="57" cy="36.5" r="5.5" />
+      <circle className="bus-mark-hub" cx="19" cy="36.5" r="2" />
+      <circle className="bus-mark-hub" cx="57" cy="36.5" r="2" />
+      <circle className="bus-mark-light" cx="8.5" cy="28" r="2" />
+    </svg>
+  )
+}
+
 function formatCountdown(departAt: number) {
   const seconds = Math.max(0, Math.floor((departAt - Date.now()) / 1000))
   const h = String(Math.floor(seconds / 3600)).padStart(2, '0')
@@ -117,7 +134,7 @@ function Header({ state, countdown, roomCode, onOpenRoom, liveMode, connection }
   return (
     <>
       <div className="topbar">
-        <button type="button" className="brand-mark room-trigger" onClick={onOpenRoom}><img className="brand-bus" src="/art/bus.png" alt="" /> {roomCode} <span className="room-trigger-arrow">↗</span></button>
+        <button type="button" className="brand-mark room-trigger" onClick={onOpenRoom}><BusMark /> {roomCode} <span className="room-trigger-arrow">↗</span></button>
         <span className={`live-pill ${liveMode ? 'is-live' : ''}`}><i /> {liveMode ? (connection === 'online' ? 'LIVE ROOM' : 'CONNECTING') : 'LOCAL DEMO'}</span>
       </div>
       <section className="route-head">
@@ -241,7 +258,7 @@ function BoardingPhase({ state, dispatch, sound, liveMode }: { state: TripState;
   )
 }
 
-function DrawingPhase({ state, sound }: { state: TripState; sound: ReturnType<typeof useSound> }) {
+function DrawingPhase({ state, sound, liveMode, onSkip }: { state: TripState; sound: ReturnType<typeof useSound>; liveMode: boolean; onSkip: () => void }) {
   const [elapsed, setElapsed] = useState(0)
   useEffect(() => {
     const timer = window.setInterval(() => setElapsed(Date.now() - (state.drawStartedAt ?? Date.now())), 100)
@@ -257,6 +274,10 @@ function DrawingPhase({ state, sound }: { state: TripState; sound: ReturnType<ty
       <div className="draw-stage"><Banban mood="drum" /><motion.div className="lottery-drum" animate={{ rotate: elapsed < 5400 ? [-3, 3, -2, 4, -3] : 0 }} transition={{ duration: .52, repeat: elapsed < 5400 ? Infinity : 0, ease: 'easeInOut' }}><img className="drum-art" src="/art/drum.png" alt="摇号鼓" /></motion.div><div className="draw-orbit">{state.tickets.map((ticket, index) => <span className="orbit-ticket" key={ticket.memberId} style={{ '--i': index, '--total': state.tickets.length } as React.CSSProperties}>{state.members.find((member) => member.id === ticket.memberId)?.emoji}</span>)}</div></div>
       <div className="reveal-label">{revealed.length === 0 ? '摇鼓中 · 别偷看' : revealed.length < state.conductors.length ? `第 ${revealed.length} 张 · 翻面中` : '列车长已就位'}</div>
       <div className="winner-row">{state.conductors.map((id, index) => { const member = state.members.find((item) => item.id === id)!; const isRevealed = index < revealIndex; return <motion.div className={`winner-ticket ${isRevealed ? 'revealed' : ''}`} key={id} initial={{ y: 28, opacity: 0 }} animate={{ y: isRevealed ? 0 : 8, opacity: 1 }} transition={{ ...spring, delay: index * .05 }}><div className="ticket-face ticket-back"><span>G604</span><b>?</b></div><div className="ticket-face ticket-front"><span className="winner-avatar">{member.emoji}</span><strong>{member.name}</strong><small>座号 {String(state.tickets.find((ticket) => ticket.memberId === id)?.seatNo ?? index + 1).padStart(2, '0')}</small><span className="conductor-stamp">列车长</span></div></motion.div> })}</div>
+      <div className="draw-controls">
+        <button type="button" className="secondary-button draw-skip-button" onClick={onSkip} disabled={liveMode}>{liveMode ? '等待房间同步揭晓' : '跳过动画，立即揭晓  →'}</button>
+        <span>{liveMode ? '由服务器统一控制结果' : '动画只是演出，结果已经锁定'}</span>
+      </div>
       <p className="draw-footer">不是他们想走，是车到点了。</p>
     </motion.div>
   )
@@ -389,6 +410,12 @@ export default function App() {
     if (liveMode && driverRef.current && isServerEvent(event)) driverRef.current.send(event)
     else dispatch(event)
   }
+  const skipDrawing = () => {
+    if (liveMode || state.phase !== 'drawing') return
+    sound.reveal()
+    haptic([20, 35, 20])
+    dispatch({ type: 'DIRECTOR_SET_PHASE', phase: 'departing' })
+  }
   useEffect(() => {
     if (!state.notification) return
     setToast(state.notification)
@@ -422,7 +449,7 @@ export default function App() {
   }
   return <div className={`app-root ${projectionMode ? 'is-projection' : ''}`} onPointerDown={() => sound.unlock()}>
     <div className="ambient ambient-one" /><div className="ambient ambient-two" />
-    <main className="phone-shell"><div className="phone-notch" /><div className="phone-screen" data-phase={phase}><Header state={state} countdown={countdown} roomCode={roomCode} onOpenRoom={() => setRoomOpen(true)} liveMode={liveMode} connection={connection} />{toast && <div className="notification-toast" role="status" aria-live="polite"><span className="toast-icon">✦</span>{toast}</div>}<div className="screen-scroll"><AnimatePresence mode="wait" initial={false}>{phase === 'idle' && <IdlePhase state={state} dispatch={dispatchEvent} liveMode={liveMode} />}{phase === 'boarding' && <BoardingPhase state={state} dispatch={dispatchEvent} sound={sound} liveMode={liveMode} />}{phase === 'drawing' && <DrawingPhase state={state} sound={sound} />}{phase === 'departing' && <DepartingPhase state={state} dispatch={dispatchEvent} sound={sound} />}{phase === 'departed' && <DepartedPhase state={state} dispatch={dispatchEvent} sound={sound} />}{isEnd && <EndPhase state={state} dispatch={dispatchEvent} liveMode={liveMode} />}</AnimatePresence></div><div className="phone-home" /></div></main>
+    <main className="phone-shell"><div className="phone-notch" /><div className="phone-screen" data-phase={phase}><Header state={state} countdown={countdown} roomCode={roomCode} onOpenRoom={() => setRoomOpen(true)} liveMode={liveMode} connection={connection} />{toast && <div className="notification-toast" role="status" aria-live="polite"><span className="toast-icon">✦</span>{toast}</div>}<div className="screen-scroll"><AnimatePresence mode="wait" initial={false}>{phase === 'idle' && <IdlePhase state={state} dispatch={dispatchEvent} liveMode={liveMode} />}{phase === 'boarding' && <BoardingPhase state={state} dispatch={dispatchEvent} sound={sound} liveMode={liveMode} />}{phase === 'drawing' && <DrawingPhase state={state} sound={sound} liveMode={liveMode} onSkip={skipDrawing} />}{phase === 'departing' && <DepartingPhase state={state} dispatch={dispatchEvent} sound={sound} />}{phase === 'departed' && <DepartedPhase state={state} dispatch={dispatchEvent} sound={sound} />}{isEnd && <EndPhase state={state} dispatch={dispatchEvent} liveMode={liveMode} />}</AnimatePresence></div><div className="phone-home" /></div></main>
     <aside className="desktop-copy"><p className="desktop-kicker">A SMALL RITUAL<br />FOR A BIG RELIEF</p><h2>不是他们想走，<br /><em>是车到点了。</em></h2><p>把“第一个站起来”从需要勇气的个人行为，变成系统派发的角色。每天下班前，发一班只属于熟人的小车。</p><div className="copy-rule" /><div className="copy-facts"><span><b>01</b> 私下组队</span><span><b>02</b> 工牌投票</span><span><b>03</b> 随机领队</span></div></aside>
     <Director phase={phase} dispatch={dispatch} liveMode={liveMode} />
     <AnimatePresence>{roomOpen && <RoomModal roomCode={roomCode} onClose={() => setRoomOpen(false)} onJoin={joinRoom} onCreate={createRoom} liveMode={liveMode} />}</AnimatePresence>

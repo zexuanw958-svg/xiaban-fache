@@ -9,6 +9,8 @@
 ```bash
 npm i
 npm run dev            # 前端 :5173 · 离线演示模式（内置假人车队，断网可演）
+npm run dev:keep       # 前端后台常驻，并自动打开界面
+npm run dev:stop       # 停止后台常驻的前端
 npm run server         # 可选联机后端 :8787（服务器 = 唯一裁判）
 npm run test:server    # 三客户端全链路冒烟：检票→抽签→发车→收班
 ```
@@ -20,7 +22,7 @@ npm run test:server    # 三客户端全链路冒烟：检票→抽签→发车�
 
 纯 reducer 状态机（`src/engine`，**前后端共用同一份**）+ 可插拔驱动（`LocalDemo` / `WebSocket`）+ 分相位 UI。
 七相位：`idle → boarding → drawing → departing → departed → settled / suspended`。
-开奖「结果先定、动画后演」：服务器广播 `DRAW_RESULT + drawStartAt`，各端同秒开播 20s 悬念动画。
+开奖「结果先定、动画后演」：服务器广播 `DRAW_RESULT + drawStartAt`，各端同秒开播 20s 悬念动画；离线演示可点击“跳过动画，立即揭晓”，联机房间仍由服务器统一控制。
 
 ## 目录
 
