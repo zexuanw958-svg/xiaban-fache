@@ -141,7 +141,7 @@ function Header({ state, countdown, roomCode, onOpenRoom, liveMode, connection }
         <div>
           <p className="eyebrow">下班发车 · 今日班次</p>
           <h1>开往 <em>家</em></h1>
-          <p className="route-note">大家都做完了，都在等第一个站起来的人。</p>
+          <p className="route-note">大家都做完了，正在等一个明确的下班信号。</p>
         </div>
         <div className="depart-clock"><span>预计发车</span><strong>{state.phase === 'boarding' || state.phase === 'idle' ? countdown : '18:00'}</strong><small>{phaseLabel[state.phase]}</small></div>
       </section>
@@ -180,7 +180,7 @@ function RoomModal({ roomCode, onClose, onJoin, onCreate, liveMode }: { roomCode
 function IdlePhase({ state, dispatch, liveMode }: { state: TripState; dispatch: (event: TripEvent) => void; liveMode: boolean }) {
   return <motion.div className="phase phase-idle" key="idle" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={softSpring}>
     <div className="phase-meta"><span className="phase-kicker">00 / 平峰</span><span className="meta-rule" /><span>今天也会准点</span></div>
-    <div className="idle-mast"><div><p className="eyebrow">下一班 · G604</p><h2>大家都在等<br /><em>一个信号。</em></h2></div><motion.div className="art-mascot" initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={spring}><img src="/art/cat-idle.png" alt="打盹的三花猫" /><span className="zzz">Z<span>z</span><i>z</i></span></motion.div></div>
+    <div className="idle-mast"><div><p className="eyebrow">下一班 · G604</p><h2>大家都在等<br /><em>一个共同信号。</em></h2></div><motion.div className="art-mascot" initial={{ y: 16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={spring}><img src="/art/cat-idle.png" alt="打盹的三花猫" /><span className="zzz">Z<span>z</span><i>z</i></span></motion.div></div>
     <div className="idle-count"><span>T-</span><strong>{formatCountdown(state.departAt)}</strong><small>距离 18:00 发车</small></div>
     <div className="idle-streak"><div><span>车队 streak</span><strong>连续准点发车 {state.streak} 班</strong></div><div className="streak-mini">🚂<small>本周</small></div></div>
     <div className="badge-wall"><div className="strip-head"><span>成员工牌墙</span><small>17:30 开始检票</small></div><div className="badge-wall-grid">{state.members.map((member) => <Badge key={member.id} member={member} submitted={false} compact />)}</div></div>
@@ -230,7 +230,7 @@ function BoardingPhase({ state, dispatch, sound, liveMode }: { state: TripState;
   return (
     <motion.div className="phase phase-boarding" key="boarding" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={softSpring}>
       <div className="phase-meta"><span className="phase-kicker">01 / 检票</span><span className="meta-rule" /><span>17:30 开始 · 还有同事在路上</span></div>
-      <div className="phase-title-row"><div><h2>把工牌刷上，<br /><em>别又坐回去。</em></h2><p>私下约好的一班车，不需要老板批准。</p></div><div className="ticket-counter"><strong>{state.tickets.length}</strong><span>/ {state.members.length}</span><small>已投卡</small></div></div>
+      <div className="phase-title-row"><div><h2>把工牌刷上，<br /><em>一起准点出发。</em></h2><p>把下班节奏变成团队共识，轻松参与。</p></div><div className="ticket-counter"><strong>{state.tickets.length}</strong><span>/ {state.members.length}</span><small>已投卡</small></div></div>
       <div className="boarding-stage">
         <div className="gate-label"><span className="signal-dot" /> G604 检票口 <span className="gate-code">A-06</span></div>
         <motion.div ref={gateRef} className="gate" animate={state.tickets.length ? { scale: [1, 1.015, 1] } : {}} transition={{ duration: .34 }}>
@@ -245,13 +245,13 @@ function BoardingPhase({ state, dispatch, sound, liveMode }: { state: TripState;
         </motion.div>
         <div className="boarding-banban"><Banban mood="wave" /></div>
       </div>
-      <div className="crew-strip"><div className="strip-head"><span>车队成员</span><small>只展示已投的人 · 不点名催票</small></div><div className="crew-avatars">{state.tickets.length === 0 ? <span className="empty-crew">第一张票，等你来盖章</span> : state.tickets.map((ticket) => { const member = state.members.find((item) => item.id === ticket.memberId)!; return <motion.div className="crew-avatar" key={ticket.memberId} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={spring}><span>{member.emoji}</span><small>{member.name}</small></motion.div> })}</div></div>
+      <div className="crew-strip"><div className="strip-head"><span>车队成员</span><small>只展示已投的人 · 参与保持轻松</small></div><div className="crew-avatars">{state.tickets.length === 0 ? <span className="empty-crew">第一张票，等你来盖章</span> : state.tickets.map((ticket) => { const member = state.members.find((item) => item.id === ticket.memberId)!; return <motion.div className="crew-avatar" key={ticket.memberId} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={spring}><span>{member.emoji}</span><small>{member.name}</small></motion.div> })}</div></div>
       <div className="badge-dock">
         <div className="dock-caption">{voted ? '工牌已刷 · 车票在箱里' : '按住工牌，拖向上面的刷卡区'}</div>
         <motion.div ref={badgeRef} className={`drag-badge ${dragging ? 'is-dragging' : ''} ${voted ? 'is-done' : ''}`} style={{ x: offset.x, y: offset.y }} animate={!dragging ? { x: offset.x, y: offset.y } : undefined} transition={spring} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') submitMe() }}>
           <span className="lanyard" /><span className="drag-avatar">{me.emoji}</span><span className="drag-copy"><b>{me.name}</b><small>{voted ? '已生成车票' : '承诺装置 · 今日有效'}</small></span><span className="drag-arrow">{voted ? '✓' : '↗'}</span>
         </motion.div>
-        <button className="text-button" onClick={() => voted ? dispatch({ type: 'WITHDRAW_TICKET', memberId: me.id }) : submitMe()}>{voted ? '活儿回来了？撤回车票' : '点一下也能刷（触屏备用）'}</button>
+        <button className="text-button" onClick={() => voted ? dispatch({ type: 'WITHDRAW_TICKET', memberId: me.id }) : submitMe()}>{voted ? '临时有事？撤回车票' : '点一下也能刷（触屏备用）'}</button>
       </div>
       <div className="phase-actions"><button className="primary-button" disabled={liveMode || !enough} onClick={() => { sound.tick(); demoDraw(state, dispatch) }}>{liveMode ? '等服务器到点开奖' : enough ? '到点开奖  →' : `还差 ${state.minCrew - state.tickets.length} 人才能开奖`}</button><span className="action-hint">{liveMode ? 'T-0 由服务器统一裁判' : `满 ${state.minCrew} 人 · 系统随机抽今天的启动键`}</span></div>
     </motion.div>
@@ -278,7 +278,7 @@ function DrawingPhase({ state, sound, liveMode, onSkip }: { state: TripState; so
         <button type="button" className="secondary-button draw-skip-button" onClick={onSkip} disabled={liveMode}>{liveMode ? '等待房间同步揭晓' : '跳过动画，立即揭晓  →'}</button>
         <span>{liveMode ? '由服务器统一控制结果' : '动画只是演出，结果已经锁定'}</span>
       </div>
-      <p className="draw-footer">不是他们想走，是车到点了。</p>
+      <p className="draw-footer">让准点下班，成为团队的共同节奏。</p>
     </motion.div>
   )
 }
@@ -292,12 +292,12 @@ function DepartingPhase({ state, dispatch, sound }: { state: TripState; dispatch
   const depart = () => { sound.depart(); haptic([40, 70, 40]); dispatch({ type: 'DEPART', memberId: me.id }) }
   return (
     <motion.div className="phase phase-departing" key="departing" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={softSpring}>
-      <div className="phase-meta"><span className="phase-kicker">03 / 发车</span><span className="meta-rule" /><span>全队都走 · TA 只是按启动键</span></div>
+      <div className="phase-meta"><span className="phase-kicker">03 / 发车</span><span className="meta-rule" /><span>全队一起走 · TA 负责按启动键</span></div>
       <div className="departing-title"><h2>{isConductor ? <>发车令<br /><em>到你手里了。</em></> : <>列车长正在<br /><em>收拾行李…</em></>}</h2><span className="departing-stamp">G604<br /><small>18:00</small></span></div>
       {isConductor ? <>
-        <div className={`duty-card ${accepted ? 'accepted' : ''}`}><div className="duty-card-top"><span className="gold-chip">列车长证</span><span className="duty-number">NO. {String(state.tickets.find((ticket) => ticket.memberId === me.id)?.seatNo ?? 1).padStart(2, '0')}</span></div><div className="duty-person"><span>{me.emoji}</span><div><strong>{me.name}</strong><small>今天负责把大家捞起来</small></div></div>{accepted ? <div className="checklist">{['合上电脑', '背上包', '站起来'].map((item, index) => <motion.button type="button" className="check-row done" key={item} initial={{ x: -12, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ ...spring, delay: index * .08 }}><span>✓</span>{item}</motion.button>)}</div> : <div className="duty-actions"><button className="primary-button gold" onClick={accept}>接令，今天我来带队</button><button className="text-button" onClick={() => dispatch({ type: 'DECLINE_DUTY', memberId: me.id })}>今天真不行 · 婉拒重抽</button></div>}</div>
+        <div className={`duty-card ${accepted ? 'accepted' : ''}`}><div className="duty-card-top"><span className="gold-chip">列车长证</span><span className="duty-number">NO. {String(state.tickets.find((ticket) => ticket.memberId === me.id)?.seatNo ?? 1).padStart(2, '0')}</span></div><div className="duty-person"><span>{me.emoji}</span><div><strong>{me.name}</strong><small>今天负责发出下班信号</small></div></div>{accepted ? <div className="checklist">{['合上电脑', '背上包', '站起来'].map((item, index) => <motion.button type="button" className="check-row done" key={item} initial={{ x: -12, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ ...spring, delay: index * .08 }}><span>✓</span>{item}</motion.button>)}</div> : <div className="duty-actions"><button className="primary-button gold" onClick={accept}>接令，今天我来带队</button><button className="text-button" onClick={() => dispatch({ type: 'DECLINE_DUTY', memberId: me.id })}>今天真不行 · 婉拒重抽</button></div>}</div>
         {accepted && <div className="slide-wrap"><div className="slide-copy"><strong>准备好了？</strong><span>滑到底，给全队一个一起走的信号</span></div><div className="slide-track"><span className="slide-track-text">滑动发车 →</span><input aria-label="滑动发车" type="range" min="0" max="100" value={slider} onChange={(event) => { const value = Number(event.target.value); setSlider(value); if (value >= 98) depart() }} /><span className="slide-thumb">→</span></div></div>}
-      </> : <div className="passenger-card"><div className="passenger-icon">🧳</div><strong>再等 10 秒，车长会按下启动键</strong><p>你不用证明自己最早做完。车一开，大家一起走。</p><div className="passenger-line"><span />正在收拾 <b>{state.conductors.map((id) => state.members.find((member) => member.id === id)?.name).join('、')}</b><span /></div><button className="secondary-button" onClick={() => { sound.depart(); dispatch({ type: 'DEPART', memberId: state.conductors[0] ?? me.id }) }}>模拟列车长发车</button></div>}
+      </> : <div className="passenger-card"><div className="passenger-icon">🧳</div><strong>再等 10 秒，列车长会发出信号</strong><p>不必比较谁先完成，车一开，大家一起走。</p><div className="passenger-line"><span />正在准备 <b>{state.conductors.map((id) => state.members.find((member) => member.id === id)?.name).join('、')}</b><span /></div><button className="secondary-button" onClick={() => { sound.depart(); dispatch({ type: 'DEPART', memberId: state.conductors[0] ?? me.id }) }}>模拟列车长发车</button></div>}
       <div className="departing-crew">{state.members.map((member) => <div className={`tiny-member ${state.conductors.includes(member.id) ? 'is-conductor' : ''}`} key={member.id}><span>{member.emoji}</span><small>{member.name}</small></div>)}</div>
     </motion.div>
   )
@@ -323,7 +323,7 @@ function DepartedPhase({ state, dispatch, sound }: { state: TripState; dispatch:
         </motion.div>
         <motion.img className="art-cat-edge" src="/art/cat-departed.png" alt="躺平的橘猫" initial={{ y: -14, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ ...spring, delay: .6 }} />
       </div>
-      <div className="board-status"><div><strong>{state.members.length}</strong><span>/{state.members.length} 已上车</span></div><span className="board-status-copy">不催你，车会等到下一站。</span></div>
+      <div className="board-status"><div><strong>{state.members.length}</strong><span>/{state.members.length} 已上车</span></div><span className="board-status-copy">按自己的节奏上车，车会等到下一站。</span></div>
       <button className={`primary-button ${boarded ? 'is-complete' : ''}`} onClick={board} disabled={boarded}>{boarded ? '✓ 已上车，今天不再加班' : '我上车了  →'}</button>
       <button className="secondary-button" onClick={() => { sound.depart(); dispatch({ type: 'SETTLE' }) }}>演示结束 · 结算今日班次</button>
     </motion.div>
@@ -335,9 +335,9 @@ function EndPhase({ state, dispatch, liveMode }: { state: TripState; dispatch: (
   return <motion.div className={`phase phase-end ${suspended ? 'is-suspended' : ''}`} key={state.phase} initial={{ opacity: 0, scale: .95 }} animate={{ opacity: 1, scale: 1 }} transition={softSpring}>
     <div className="end-mast"><motion.img className="art-mascot-end" src={suspended ? '/art/cat-suspended.png' : '/art/cat-settled.png'} alt="吉祥物" initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={spring} /><span className="end-kicker">{suspended ? '今日停运' : '今日收班'}</span></div>
     <h2>{suspended ? <>今天没凑齐，<em>明天再发。</em></> : <>准点下班，<em>明天见。</em></>}</h2>
-    <div className="settle-card"><div><span className="settle-label">G604</span><strong>{suspended ? '客流不足 · streak 冻结' : '准点发出 · 全员 6 人'}</strong><small>{suspended ? '不清零，不追责，明天继续' : '下班不是逃跑，是班车到站了'}</small></div>{!suspended && <div className="streak-badge"><span>连续</span><strong>{state.streak}</strong><small>班</small></div>}</div>
+    <div className="settle-card"><div><span className="settle-label">G604</span><strong>{suspended ? '客流不足 · streak 冻结' : '准点发出 · 全员 6 人'}</strong><small>{suspended ? '不清零，不追责，明天继续' : '准点下班，是团队节奏的一部分'}</small></div>{!suspended && <div className="streak-badge"><span>连续</span><strong>{state.streak}</strong><small>班</small></div>}</div>
     {!suspended && <div className="streak-calendar"><span>近 7 日准点记录</span><div>{['一','二','三','四','五','六','今'].map((day, i) => <div className={i === 6 ? 'today' : ''} key={day}><small>{day}</small><b>{i === 6 ? '🚂' : '●'}</b></div>)}</div></div>}
-    <p className="end-quote">「第一个走」不该是个人英雄主义，<br />它可以只是系统今天抽到了你。</p>
+    <p className="end-quote">准点下班不靠个人硬撑，<br />团队一起把发车变成日常。</p>
     <button className="primary-button" disabled={liveMode} onClick={() => dispatch({ type: 'RESET' })}>{liveMode ? '本班已结束 · 等待下一班' : '再发一班车  ↗'}</button>
   </motion.div>
 }
@@ -450,7 +450,7 @@ export default function App() {
   return <div className={`app-root ${projectionMode ? 'is-projection' : ''}`} onPointerDown={() => sound.unlock()}>
     <div className="ambient ambient-one" /><div className="ambient ambient-two" />
     <main className="phone-shell"><div className="phone-notch" /><div className="phone-screen" data-phase={phase}><Header state={state} countdown={countdown} roomCode={roomCode} onOpenRoom={() => setRoomOpen(true)} liveMode={liveMode} connection={connection} />{toast && <div className="notification-toast" role="status" aria-live="polite"><span className="toast-icon">✦</span>{toast}</div>}<div className="screen-scroll"><AnimatePresence mode="wait" initial={false}>{phase === 'idle' && <IdlePhase state={state} dispatch={dispatchEvent} liveMode={liveMode} />}{phase === 'boarding' && <BoardingPhase state={state} dispatch={dispatchEvent} sound={sound} liveMode={liveMode} />}{phase === 'drawing' && <DrawingPhase state={state} sound={sound} liveMode={liveMode} onSkip={skipDrawing} />}{phase === 'departing' && <DepartingPhase state={state} dispatch={dispatchEvent} sound={sound} />}{phase === 'departed' && <DepartedPhase state={state} dispatch={dispatchEvent} sound={sound} />}{isEnd && <EndPhase state={state} dispatch={dispatchEvent} liveMode={liveMode} />}</AnimatePresence></div><div className="phone-home" /></div></main>
-    <aside className="desktop-copy"><p className="desktop-kicker">A SMALL RITUAL<br />FOR A BIG RELIEF</p><h2>不是他们想走，<br /><em>是车到点了。</em></h2><p>把“第一个站起来”从需要勇气的个人行为，变成系统派发的角色。每天下班前，发一班只属于熟人的小车。</p><div className="copy-rule" /><div className="copy-facts"><span><b>01</b> 私下组队</span><span><b>02</b> 工牌投票</span><span><b>03</b> 随机领队</span></div></aside>
+    <aside className="desktop-copy"><p className="desktop-kicker">A SMALL RITUAL<br />FOR A BIG RELIEF</p><h2>不是催着离开，<br /><em>是让准点发生。</em></h2><p>把“准点下班”从个人选择，变成团队共识。每天下班前，发一班只属于熟人的小车。</p><div className="copy-rule" /><div className="copy-facts"><span><b>01</b> 团队组队</span><span><b>02</b> 工牌投票</span><span><b>03</b> 随机领队</span></div></aside>
     <Director phase={phase} dispatch={dispatch} liveMode={liveMode} />
     <AnimatePresence>{roomOpen && <RoomModal roomCode={roomCode} onClose={() => setRoomOpen(false)} onJoin={joinRoom} onCreate={createRoom} liveMode={liveMode} />}</AnimatePresence>
   </div>
