@@ -35,7 +35,7 @@ curl http://localhost:8787/api/rooms/G604
 ```
 
 2. 服务端返回 `WELCOME` 和全量 `STATE`。
-3. 客户端只发送意图：`SUBMIT_TICKET`、`WITHDRAW_TICKET`、`DECLINE_DUTY`、`DEPART`、`BOARD`、`SETTLE`。
+3. 客户端只发送意图：`SUBMIT_TICKET`、`WITHDRAW_TICKET`、`ACCEPT_DUTY`、`DECLINE_DUTY`、`DEPART`、`BOARD`、`SETTLE`。
 4. 服务端定时器负责 T-30、T-0、抽签结果与 `drawStartAt`，并向全房广播 `DRAW_RESULT` + `STATE`。
 
-房间没有数据库；重连时重复 `JOIN` 会无脑返回最新快照。当前版本适合黑客松演示，生产化前需要持久化、鉴权、房间过期清理和常驻实例。
+房间没有数据库；重连时重复 `JOIN` 会无脑返回最新快照。空房 24 小时自动过期清理已内置。当前版本适合黑客松演示，生产化前需要持久化、鉴权和常驻实例。
