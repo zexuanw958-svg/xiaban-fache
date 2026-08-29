@@ -3,7 +3,8 @@
 一句话：把「第一个下班」变成系统派发的角色——组队、检票、摇号抽列车长、全队准点走。
 
 ## 跑
-- `npm run dev` → :5173，默认离线演示（假人自动投票）；`?director=1` 导演台跳任意相位
+- `npm run dev` → :5173，默认离线演示（假人自动投票），启动时自动打开页面；`?director=1` 导演台跳任意相位
+- `npm run dev:keep` / `npm run dev:stop` → 后台常驻 / 停止前端页面服务，适合演示时关闭终端仍保持页面可访问
 - `npm run server` → :8787 联机后端；前端 `?room=X&live=1` 接入；`npm run test:server` 冒烟
 
 ## 栈与结构
@@ -22,4 +23,4 @@
 ## 当前状态 / 下一步
 - 已完成：七相位闭环、S1 联机（冒烟通过）、北欧换皮、生图素材接入关键相位
 - 下一步：后端地址改环境变量（App.tsx 硬编码 :8787）、公网部署、streak 落盘、建队流程 F1–F7
-- 设计真源：`designs/fache-layered-pages/分层页面设计板 · 北欧风.html`；repo：github.com/zexuanw958-svg/xiaban-fache（私有）
+- 设计真源：`designs/fache-layered-pages/分层页面设计板 · 北欧风.html`；repo：github.com/zexuanw958-svg/xiaban-fache（公开）

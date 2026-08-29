@@ -191,7 +191,9 @@ button { -webkit-tap-highlight-color: transparent; }
 .mini-ticket small { font: 700 8.5px var(--font-mono); color: var(--amber-d); }
 .box-count { margin-top: 8px; text-align: center; color: var(--soft); font-size: 10px; font-weight: 700; }
 .box-count strong { font: 800 15px var(--font-num); color: var(--ink); }
-.boarding-stage .banban { position: absolute; left: 158px; bottom: 10px; transform: scale(.82); transform-origin: bottom left; }
+.boarding-banban { position: absolute; left: 136px; bottom: 5px; z-index: 2; transform: scale(.76); transform-origin: bottom left; pointer-events: none; }
+.boarding-banban .banban { position: relative; left: auto; bottom: auto; transform-origin: bottom left; }
+.boarding-banban .banban-bubble { top: -43px; }
 .crew-strip { margin-top: 12px; padding: 12px 14px; border-radius: 18px; background: var(--paper2); }
 .crew-avatars { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; align-items: center; }
 .empty-crew { color: var(--muted); font-size: 10.5px; }

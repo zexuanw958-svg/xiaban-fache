@@ -243,7 +243,7 @@ function BoardingPhase({ state, dispatch, sound, liveMode }: { state: TripState;
           <div className="ticket-box"><div className="box-lid" /><div className="ticket-box-label">票 箱 <span>G604</span></div>{state.tickets.slice(-4).map((ticket) => <motion.div className="mini-ticket" key={ticket.memberId} initial={{ y: -32, opacity: 0, rotate: -12 }} animate={{ y: 0, opacity: 1, rotate: (ticket.seatNo % 2 ? -5 : 5) }} transition={spring}>{state.members.find((member) => member.id === ticket.memberId)?.emoji}<small>{String(ticket.seatNo).padStart(2, '0')}</small></motion.div>)}</div>
           <div className="box-count">已检票 <strong>{state.tickets.length}</strong> / {state.members.length}</div>
         </motion.div>
-        <Banban mood="wave" />
+        <div className="boarding-banban"><Banban mood="wave" /></div>
       </div>
       <div className="crew-strip"><div className="strip-head"><span>车队成员</span><small>只展示已投的人 · 不点名催票</small></div><div className="crew-avatars">{state.tickets.length === 0 ? <span className="empty-crew">第一张票，等你来盖章</span> : state.tickets.map((ticket) => { const member = state.members.find((item) => item.id === ticket.memberId)!; return <motion.div className="crew-avatar" key={ticket.memberId} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={spring}><span>{member.emoji}</span><small>{member.name}</small></motion.div> })}</div></div>
       <div className="badge-dock">

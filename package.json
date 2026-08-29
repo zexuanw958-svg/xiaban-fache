@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:keep": "node scripts/dev-keep.mjs start",
+    "dev:stop": "node scripts/dev-keep.mjs stop",
     "server": "tsx server/index.ts",
     "server:watch": "tsx watch server/index.ts",
     "test:server": "tsx server/smoke.ts",

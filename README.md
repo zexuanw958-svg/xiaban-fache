@@ -24,6 +24,10 @@ npm run test:server    # 三客户端全链路冒烟：检票→抽签→发车�
 七相位：`idle → boarding → drawing → departing → departed → settled / suspended`。
 开奖「结果先定、动画后演」：服务器广播 `DRAW_RESULT + drawStartAt`，各端同秒开播 20s 悬念动画；离线演示可点击“跳过动画，立即揭晓”，联机房间仍由服务器统一控制。
 
+## License
+
+MIT，见 [LICENSE](LICENSE)。
+
 ## 目录
 
 | 路径 | 内容 |
